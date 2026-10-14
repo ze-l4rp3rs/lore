@@ -8,7 +8,7 @@ from typing import Any
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
-from src.providers.base import Message, Provider, ToolMemo
+from src.providers.base import Message, Provider, ToolMemo, ToolTrace
 from src.storage.run_logger import RunLogger
 from src.validations import SourceRegistry, build_registry, render_context
 from src.workflow.render import number_citations, render_markdown
@@ -37,6 +37,26 @@ class RunResult:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def format_request(
+    question: str,
+    registry: SourceRegistry
+) -> str:
+    return f"{render_context(registry)}\n\n<question>\n{question}\n</question>"
+
+
+def format_tool_trace(
+    traces: list[ToolTrace]
+) -> str:
+    if not traces:
+        return "(no tool calls)"
+    lines = []
+    for trace in traces:
+        arguments = json.dumps(trace.arguments, ensure_ascii=False)
+        outcome = "sources " + ", ".join(trace.source_ids) if trace.source_ids else "(no results)"
+        lines.append(f"- {trace.name}({arguments}) -> {outcome}")
+    return "\n".join(lines)
 
 
 def _json_object(
@@ -74,15 +94,22 @@ def parse_review(
 
 def review(
     provider: Provider,
-    request: str,
+    question: str,
     registry: SourceRegistry,
     draft: str,
+    traces: list[ToolTrace],
     logger: RunLogger
 ) -> tuple[bool, list[str]] | None:
-    reply = ask(provider, provider.reflector_model, [
+    # the reflector sees the same sources as the generator, plus which tool produced which source
+    messages: list[Message] = [
         {"role": "system", "content": config.REFLECTOR_PROMPT},
-        {"role": "user", "content": f"{request}\n\n<draft>\n{draft}\n</draft>"},
-    ], registry, use_tools=False)  # the reflector checks the draft against the sources; it needs no tools
+        {"role": "user", "content": (
+            f"{format_request(question, registry)}\n\n"
+            f"<tool_calls>\n{format_tool_trace(traces)}\n</tool_calls>\n\n"
+            f"<draft>\n{draft}\n</draft>"
+        )},
+    ]
+    reply = ask(provider, provider.reflector_model, messages, registry, use_tools=False)
     parsed = parse_review(reply.text)
     logger.step("review", output=reply.text, reasoning=reply.reasoning, usable=parsed is not None)
     return parsed
@@ -90,13 +117,14 @@ def review(
 
 def check(
     provider: Provider,
-    request: str,
+    question: str,
     registry: SourceRegistry,
     draft: str,
+    traces: list[ToolTrace],
     logger: RunLogger
 ) -> Check:
     try:
-        reviewed = review(provider, request, registry, draft, logger)
+        reviewed = review(provider, question, registry, draft, traces, logger)
     except Exception as caught:
         logger.step(
             "review",
@@ -126,8 +154,8 @@ def run(
     started = time.perf_counter()
     logger = RunLogger(question)
     registry = build_registry(context)
-    request = f"{render_context(registry)}\n\n<question>\n{question}\n</question>"
     memo: ToolMemo = {}  # one per run: a repeated tool call is answered from here
+    traces: list[ToolTrace] = []
     checks: list[Check] = []
     logger.step("start", provider=provider.name, generator=provider.generator_model,
                 reflector=provider.reflector_model, context_sources=list(registry.sources))
@@ -135,24 +163,25 @@ def run(
     try:
         messages: list[Message] = [
             {"role": "system", "content": config.GENERATOR_PROMPT},
-            {"role": "user", "content": request},
+            {"role": "user", "content": format_request(question, registry)},
         ]
         for round_number in range(config.MAX_FIX_ROUNDS + 1):
             # 1. generator: answer from the context and whatever its tools return
             reply = ask(provider, provider.generator_model, messages, registry, memo, user=user)
+            traces += reply.tool_trace
             logger.step("draft", round=round_number, text=reply.text, tools=reply.tool_trace, reasoning=reply.reasoning)
 
             # 2. reflector: a verdict on the draft, as JSON the workflow can act on
-            result = check(provider, request, registry, reply.text, logger)
+            result = check(provider, question, registry, reply.text, traces, logger)
             checks.append(result)
             if not result.reviewed or not result.problems or round_number == config.MAX_FIX_ROUNDS:
                 break
 
             # continue the same conversation (tool turns included) with only the problems,
             # so correct sentences are kept rather than rewritten
-            request_fix = fix_request(result)
-            logger.step("fix", request=request_fix)
-            messages = reply.messages + [{"role": "user", "content": request_fix}]
+            request = fix_request(result)
+            logger.step("fix", request=request)
+            messages = reply.messages + [{"role": "user", "content": request}]
     except Exception as caught:
         logger.step("error", error=f"{type(caught).__name__}: {caught}")
         if not checks:
