@@ -10,6 +10,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 import config
 from src.providers.base import Message, Provider, ToolMemo
 from src.storage.run_logger import RunLogger
+from src.validations import SourceRegistry, build_registry, render_context
+from src.workflow.render import number_citations, render_markdown
 from src.workflow.tool_loop import ask
 
 
@@ -24,8 +26,9 @@ class Check:
 @dataclass
 class RunResult:
     question: str
-    answer: str  # the final draft
+    answer: str  # the final draft, with [[cite:...]] tokens
     markdown: str  # what a person reads
+    sources: list[dict]  # cited sources, numbered as in the markdown
     problems: list[str]  # left unresolved after the last round
     status: str  # "verified", "partly verified", or "not checked"
     log: str
@@ -72,13 +75,14 @@ def parse_review(
 def review(
     provider: Provider,
     request: str,
+    registry: SourceRegistry,
     draft: str,
     logger: RunLogger
 ) -> tuple[bool, list[str]] | None:
     reply = ask(provider, provider.reflector_model, [
         {"role": "system", "content": config.REFLECTOR_PROMPT},
         {"role": "user", "content": f"{request}\n\n<draft>\n{draft}\n</draft>"},
-    ])
+    ], registry, use_tools=False)  # the reflector checks the draft against the sources; it needs no tools
     parsed = parse_review(reply.text)
     logger.step("review", output=reply.text, reasoning=reply.reasoning, usable=parsed is not None)
     return parsed
@@ -87,13 +91,19 @@ def review(
 def check(
     provider: Provider,
     request: str,
+    registry: SourceRegistry,
     draft: str,
     logger: RunLogger
 ) -> Check:
     try:
-        reviewed = review(provider, request, draft, logger)
+        reviewed = review(provider, request, registry, draft, logger)
     except Exception as caught:
-        logger.step("review", error=f"{type(caught).__name__}: {caught}")
+        logger.step(
+            "review",
+            error=f"{type(caught).__name__}: {caught}",
+            tools=getattr(caught, "tool_trace", []),
+            reasoning=getattr(caught, "reasoning", ""),
+        )
         reviewed = None
     if reviewed is None:
         return Check(draft=draft, reviewed=False)
@@ -115,11 +125,12 @@ def run(
 ) -> RunResult:
     started = time.perf_counter()
     logger = RunLogger(question)
-    request = f"<context>\n{context}\n</context>\n\n<question>\n{question}\n</question>"
+    registry = build_registry(context)
+    request = f"{render_context(registry)}\n\n<question>\n{question}\n</question>"
     memo: ToolMemo = {}  # one per run: a repeated tool call is answered from here
     checks: list[Check] = []
     logger.step("start", provider=provider.name, generator=provider.generator_model,
-                reflector=provider.reflector_model)
+                reflector=provider.reflector_model, context_sources=list(registry.sources))
 
     try:
         messages: list[Message] = [
@@ -128,11 +139,11 @@ def run(
         ]
         for round_number in range(config.MAX_FIX_ROUNDS + 1):
             # 1. generator: answer from the context and whatever its tools return
-            reply = ask(provider, provider.generator_model, messages, memo, user=user)
+            reply = ask(provider, provider.generator_model, messages, registry, memo, user=user)
             logger.step("draft", round=round_number, text=reply.text, tools=reply.tool_trace, reasoning=reply.reasoning)
 
             # 2. reflector: a verdict on the draft, as JSON the workflow can act on
-            result = check(provider, request, reply.text, logger)
+            result = check(provider, request, registry, reply.text, logger)
             checks.append(result)
             if not result.reviewed or not result.problems or round_number == config.MAX_FIX_ROUNDS:
                 break
@@ -149,18 +160,17 @@ def run(
             raise
 
     last = checks[-1]
+    body, sources = number_citations(last.draft, registry)
+    markdown = render_markdown(body, sources, last.problems, last.reviewed)
     if not last.reviewed:
         status = "not checked"
-        markdown = f"{last.draft}\n\n(This answer could not be fact-checked.)"
     elif last.problems:
         status = "partly verified"
-        markdown = last.draft + "\n\nThe fact-checker flagged:\n" + "\n".join(f"- {p}" for p in last.problems)
     else:
         status = "verified"
-        markdown = last.draft
 
     result = RunResult(
-        question=question, answer=last.draft, markdown=markdown, problems=last.problems, status=status,
+        question=question, answer=last.draft, markdown=markdown, sources=sources, problems=last.problems, status=status,
         log=logger.path + ".json", rounds=len(checks), elapsed_ms=int((time.perf_counter() - started) * 1000),
     )
     logger.save(result.to_dict(), markdown)

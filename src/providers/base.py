@@ -40,6 +40,7 @@ class ToolTrace:
     name: str
     arguments: dict
     result: str  # exactly what the model was shown
+    source_ids: tuple[str, ...] = ()  # registry sources this result created
 
 
 @dataclass

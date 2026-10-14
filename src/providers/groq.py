@@ -94,10 +94,9 @@ def complete(
     tools: list[dict] | None = None,
     tool_choice: str = "auto"
 ) -> Completion:
-    extra: dict[str, Any] = {"tools": tools, "tool_choice": tool_choice} if tools else {}
-    if config.GROQ_REASONING_FORMAT:
-        # "parsed" moves any thinking out of the answer into message.reasoning
-        extra["reasoning_format"] = config.GROQ_REASONING_FORMAT
+    # tool_choice "none" means the model must answer: send no tools at all, because a model that
+    # still writes a tool call makes Groq reject the whole request (the history keeps the earlier tool turns)
+    extra: dict[str, Any] = {"tools": tools, "tool_choice": tool_choice} if tools and tool_choice != "none" else {}
     max_tokens = min(config.MAX_TOKENS, _max_tokens_cap or config.MAX_TOKENS)
     response = create_with_retry(
         model=model,
