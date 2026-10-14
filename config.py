@@ -23,6 +23,8 @@ TEMPERATURE = 0
 MAX_FIX_ROUNDS = 2  # targeted fixes after the first draft
 MAX_TOOL_STEPS = 6
 
+RUNS_FOLDER = "runs"
+
 GENERATOR_PROMPT = (
     "You are Company Brain, a knowledge assistant for organizational data.\n\n"
 

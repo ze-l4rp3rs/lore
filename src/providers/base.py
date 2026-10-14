@@ -34,6 +34,25 @@ class RequestTooLarge(RuntimeError):
 
 
 @dataclass(frozen=True)
+class ToolTrace:
+    name: str
+    arguments: dict
+    result: str  # exactly what the model was shown
+
+
+@dataclass
+class ModelReply:
+    text: str
+    tool_trace: list[ToolTrace] = field(default_factory=list)
+    reasoning: str = ""  # kept out of the answer, logged for debugging
+    messages: list[Message] = field(default_factory=list)  # the whole conversation, tool turns included
+
+
+# one tool result per (name, arguments) for the whole run, so a repeated call is reused, not re-run
+ToolMemo = dict[str, ToolTrace]
+
+
+@dataclass(frozen=True)
 class Provider:
     name: str
     complete: Complete

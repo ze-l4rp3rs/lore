@@ -113,4 +113,5 @@ def complete(
         text=message.content or "",
         tool_calls=calls,
         finish_reason=str(choice.finish_reason),
+        reasoning=getattr(message, "reasoning", None) or "",
     )

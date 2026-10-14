@@ -7,7 +7,7 @@ from typing import Any
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
-from src.providers.base import Message, Provider, ToolCall
+from src.providers.base import Message, ModelReply, Provider, ToolCall, ToolMemo, ToolTrace
 from src.tools import AVAILABLE_FUNCTIONS, TOOL_SCHEMAS, call_tool
 
 _THINK_BLOCK = re.compile(r"<(think|thinking)>.*?</\1>", re.IGNORECASE | re.DOTALL)
@@ -33,53 +33,75 @@ def split_reasoning(
     return text.strip(), "\n\n".join(part.strip() for part in reasoning if part.strip())
 
 
+def memo_key(
+    name: str,
+    arguments: dict
+) -> str:
+    return name + json.dumps(arguments, sort_keys=True, default=str)
+
+
 def run_tool(
     call: ToolCall,
+    memo: ToolMemo,
     user: Any
-) -> str:
+) -> ToolTrace:
+    arguments: dict = {}
     try:
-        arguments = json.loads(call.arguments or "{}")
-        if not isinstance(arguments, dict):
+        parsed = json.loads(call.arguments or "{}")
+        if not isinstance(parsed, dict):
             raise ValueError("arguments must be a JSON object")
+        arguments = parsed
+        key = memo_key(call.name, arguments)
+        if key in memo:
+            # same tool + same arguments already ran this run: reuse, don't re-execute
+            return memo[key]
         if call.name not in AVAILABLE_FUNCTIONS:
             raise KeyError(f"unknown tool {call.name!r}")
-        return str(call_tool(call.name, arguments, user))
+        result = str(call_tool(call.name, arguments, user))
     except Exception as caught:
-        # never let a bad or unknown tool call kill the run; tell the model instead
-        return f"Tool error ({call.name}): {type(caught).__name__}: {caught}"
+        # never let a bad or unknown tool call kill the run; tell the model instead (and don't memoize)
+        return ToolTrace(name=call.name, arguments=arguments, result=f"Tool error ({call.name}): {type(caught).__name__}: {caught}")
+
+    trace = ToolTrace(name=call.name, arguments=arguments, result=result)
+    memo[key] = trace
+    return trace
 
 
 def ask(
     provider: Provider,
     model: str,
     messages: list[Message],
+    memo: ToolMemo | None = None,
     user: Any = None
-) -> str:
-    # every turn is appended to messages, tool turns included, so the caller can continue the conversation
+) -> ModelReply:
+    # work on a copy; the reply carries the full history so a follow-up can continue the conversation
+    history = list(messages)
     tools = TOOL_SCHEMAS or None
+    memo = memo if memo is not None else {}
+    tool_trace: list[ToolTrace] = []
+    reasoning: list[str] = []
 
     for step in range(config.MAX_TOOL_STEPS + 1):
         # out of tool budget: the last call must answer from the results it already has
         tool_choice = "auto" if step < config.MAX_TOOL_STEPS else "none"
-        completion = provider.complete(model, messages, tools, tool_choice)
+        completion = provider.complete(model, history, tools, tool_choice)
         text, leaked = split_reasoning(completion.text)
-        reasoning = [part for part in (completion.reasoning.strip(), leaked) if part]
-        if reasoning:
-            # kept out of the answer, but not lost: stderr, so stdout carries only the answer
-            print("[model reasoning]\n" + "\n\n".join(reasoning), file=sys.stderr)
+        reasoning += [part for part in (completion.reasoning.strip(), leaked) if part]
 
         if not completion.tool_calls:
             if text == "":
                 raise RuntimeError(f"Empty response from {model} (finish_reason = {completion.finish_reason}).")
-            messages.append({"role": "assistant", "content": text})
-            return text
+            history.append({"role": "assistant", "content": text})
+            return ModelReply(text=text, tool_trace=tool_trace, reasoning="\n\n".join(reasoning), messages=history)
         if tools is None or tool_choice == "none":
             raise RuntimeError(f"{model} called a tool when tools were not allowed.")
 
         # text written next to a tool call is dropped: the model must write the WHOLE
         # answer after the results arrive, otherwise only the tail is ever returned
-        messages.append({"role": "assistant", "content": "", "tool_calls": completion.tool_calls})
+        history.append({"role": "assistant", "content": "", "tool_calls": completion.tool_calls})
         for call in completion.tool_calls:
-            messages.append({"role": "tool", "content": run_tool(call, user), "tool_call_id": call.id})
+            trace = run_tool(call, memo, user)
+            tool_trace.append(trace)
+            history.append({"role": "tool", "content": trace.result, "tool_call_id": call.id})
 
     raise AssertionError("unreachable: the last step never allows tools")
