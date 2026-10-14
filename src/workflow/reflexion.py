@@ -54,7 +54,10 @@ def format_tool_trace(
     lines = []
     for trace in traces:
         arguments = json.dumps(trace.arguments, ensure_ascii=False)
-        outcome = "sources " + ", ".join(trace.source_ids) if trace.source_ids else "(no results)"
+        if trace.status != "ok":
+            outcome = f"[{trace.status}: {trace.error}]"
+        else:
+            outcome = "sources " + ", ".join(trace.source_ids) if trace.source_ids else "(no results)"
         lines.append(f"- {trace.name}({arguments}) -> {outcome}")
     return "\n".join(lines)
 
@@ -168,7 +171,7 @@ def run(
         for round_number in range(config.MAX_FIX_ROUNDS + 1):
             # 1. generator: answer from the context and whatever its tools return
             reply = ask(provider, provider.generator_model, messages, registry, memo, user=user)
-            traces += reply.tool_trace
+            traces += [trace for trace in reply.tool_trace if not trace.cached]  # a reused result is already listed
             logger.step("draft", round=round_number, text=reply.text, tools=reply.tool_trace, reasoning=reply.reasoning)
 
             # 2. reflector: a verdict on the draft, as JSON the workflow can act on

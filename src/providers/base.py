@@ -41,6 +41,10 @@ class ToolTrace:
     arguments: dict
     result: str  # exactly what the model was shown
     source_ids: tuple[str, ...] = ()  # registry sources this result created
+    status: str = "ok"
+    error: str = ""
+    duration_ms: int = 0
+    cached: bool = False  # True when the result was reused from an earlier call in this run
 
 
 @dataclass

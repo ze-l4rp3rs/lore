@@ -2,6 +2,8 @@ import json
 import os
 import re
 import sys
+import time
+from dataclasses import replace
 from typing import Any
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
@@ -62,6 +64,7 @@ def run_tool(
     memo: ToolMemo,
     user: Any
 ) -> ToolTrace:
+    started = time.perf_counter()
     arguments: dict = {}
     try:
         parsed = json.loads(call.arguments or "{}")
@@ -71,19 +74,28 @@ def run_tool(
         key = memo_key(call.name, arguments)
         if key in memo:
             # same tool + same arguments already ran this run: reuse, don't re-execute
-            return memo[key]
+            return replace(memo[key], cached=True, duration_ms=0)
         if call.name not in AVAILABLE_FUNCTIONS:
             raise KeyError(f"unknown tool {call.name!r}")
         sources = register_result(call.name, arguments, call_tool(call.name, arguments, user), registry)
     except Exception as caught:
         # never let a bad or unknown tool call kill the run; tell the model instead (and don't memoize)
-        return ToolTrace(name=call.name, arguments=arguments, result=f"Tool error ({call.name}): {type(caught).__name__}: {caught}")
+        error = f"{type(caught).__name__}: {caught}"
+        return ToolTrace(
+            name=call.name,
+            arguments=arguments,
+            result=f"Tool error ({call.name}): {error}",
+            status="error",
+            error=error,
+            duration_ms=int((time.perf_counter() - started) * 1000),
+        )
 
     trace = ToolTrace(
         name=call.name,
         arguments=arguments,
         result=render_sources(sources) if sources else "(no results)",
         source_ids=tuple(source.id for source in sources),
+        duration_ms=int((time.perf_counter() - started) * 1000),
     )
     memo[key] = trace
     return trace
