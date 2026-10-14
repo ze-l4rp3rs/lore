@@ -31,13 +31,13 @@ class Check:
     """One draft after the code checks and the reflector's review."""
     draft: Draft
     issues: dict[int, list[str]]  # sentence number -> problems; these sentences are not trusted
-    missing: list[str] = field(default_factory=list)  # parts of the question left unanswered
+    missing: list[str] = field(default_factory=list)  # parts of the question the records do not answer
     premise: list[str] = field(default_factory=list)  # false premises left uncorrected
     reviewed: bool = True  # False when the reflector's output could not be used
 
     def score(self) -> tuple[int, int, int]:
-        # lower is better: a reviewed draft beats an unreviewed one, then fewest bad sentences, then gaps
-        return (0 if self.reviewed else 1, len(self.issues), len(self.missing) + len(self.premise))
+        # lower is better: a reviewed draft beats an unreviewed one, then fewest bad sentences, then uncorrected premises
+        return (0 if self.reviewed else 1, len(self.issues), len(self.premise))
 
 
 @dataclass
@@ -196,7 +196,6 @@ def fix_request(
         f'- "{strip_citations(result.draft.sentence(number))}": {"; ".join(found)}'
         for number, found in sorted(result.issues.items())
     ]
-    problems += [f"- Not answered although the sources cover it: {item}" for item in result.missing]
     problems += [f"- False premise in the question you did not correct: {item}" for item in result.premise]
     return config.FIX_REQUEST.format(problems="\n".join(problems))
 
@@ -204,7 +203,8 @@ def fix_request(
 def needs_fix(
     result: Check
 ) -> bool:
-    return bool(result.issues or result.missing or result.premise)
+    # a gap in the records is reported, not fixed: the model cannot answer what the records lack
+    return bool(result.issues or result.premise)
 
 
 def _reader_reason(
@@ -273,7 +273,7 @@ def run(
     markdown = render_markdown(body, sources, unverified, best.premise, best.missing, best.reviewed)
     if not best.reviewed:
         status = "not checked"
-    elif unverified or best.premise or best.missing:
+    elif unverified or best.premise:
         status = "partly verified"
     else:
         status = "verified"

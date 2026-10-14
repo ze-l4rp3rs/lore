@@ -1,9 +1,11 @@
 import argparse
+import json
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+from src.api.response import build_response
 from src.providers.router import select_provider
 from src.workflow.reflexion import run
 
@@ -26,4 +28,4 @@ if __name__ == "__main__":
         raise SystemExit("No question given.")
 
     result = run(provider, question, context)
-    print(result.markdown)
+    print(json.dumps(build_response(result), indent=2, ensure_ascii=False))

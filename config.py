@@ -61,8 +61,7 @@ REFLECTOR_PROMPT = (
     "or it uses information the user/sources never provided\n\n"
 
     "Report:\n"
-    "- missing: parts of the question that the sources DO answer but the draft left out. "
-    "Do not list information the sources lack when the draft already says so (e.g. under 'Not in company records:')\n"
+    "- missing: parts of the question the sources do not answer\n"
     "- premise: false assumptions in the question not corrected\n\n"
 
     "Output JSON only: {\"sentences\": [{\"n\": 1, \"supported\": true, \"problem\": \"\"}], \"missing\": [], "

@@ -104,5 +104,5 @@ def render_markdown(
         out += [f"- “{item['claim']}” ({item['reason']})" for item in unverified]
         out += [f"- Your question assumes something the records don't support: {item}" for item in premise]
     if missing:
-        out += ["", "**May be incomplete:** " + " ".join(missing)]
+        out += ["", "**The records don't answer:** " + " ".join(missing)]
     return "\n".join(out).strip()
