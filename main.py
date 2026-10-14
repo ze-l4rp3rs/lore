@@ -1,0 +1,17 @@
+import argparse
+import os
+
+from reflexor import reflexion
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Ask Company Brain a question.")
+    parser.add_argument("context", help="text file holding the context to answer from")
+    parser.add_argument("question", help="the question")
+    args = parser.parse_args()
+
+    if not os.path.isfile(args.context):
+        raise SystemExit(f"Context file not found: {args.context}")
+    with open(args.context, encoding="utf-8") as f:
+        context = f.read()
+
+    print(reflexion(args.question, context))

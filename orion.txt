@@ -1,0 +1,23 @@
+[doc: rfc-031-auth-migration, 2026-06-02]
+RFC-031, authored by Lena Okafor (Senior Engineer, Platform team), proposes migrating
+customer authentication from the in-house "Gatekeeper" service to Keycloak. Proposed
+approver: Tomás Rivera (Head of Platform). Target date: 2026-08-15.
+
+[chat: #platform-leads, 2026-06-09]
+Tomás Rivera: Approving RFC-031. Lena drives it, Arjun please own the rollout.
+Arjun Mehta: Ack, I'll own rollout. Ticket is PLAT-882.
+
+[ticket: PLAT-882, 2026-06-10]
+Keycloak rollout. Assignee: Arjun Mehta. Reviewer: Lena Okafor.
+Depends on PLAT-870 (SAML connector for enterprise tenants), assignee Wei Zhang.
+
+[chat: #platform-leads, 2026-07-21]
+Tomás Rivera: Pushing the Keycloak target from Aug 15 to Oct 1 — SAML connector
+isn't ready. This supersedes the date in RFC-031.
+
+[ticket: PLAT-882, 2026-08-04]
+Reassigned from Arjun Mehta to Sofia Brandt. Arjun moved to the Payments team.
+Arjun remains the best contact for Gatekeeper internals (he wrote most of it).
+
+[doc: oncall-handbook, 2026-03-01]
+Gatekeeper on-call owner: Platform team. Escalation: Tomás Rivera.
