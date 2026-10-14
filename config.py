@@ -3,6 +3,7 @@ GROQ_MODEL = "qwen/qwen3.8-27b"
 
 MAX_TOKENS = 2000
 TEMPERATURE = 0
+MAX_TOOL_STEPS = 6
 
 GENERATOR_PROMPT = (
     "You are Company Brain, a knowledge assistant for organizational data.\n\n"

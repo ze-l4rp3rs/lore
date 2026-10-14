@@ -1,7 +1,10 @@
 import argparse
 import os
+import sys
 
-from reflexor import reflexion
+sys.path.insert(0, os.path.dirname(__file__))
+
+from src.workflow.reflexion import reflexion
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ask Company Brain a question.")

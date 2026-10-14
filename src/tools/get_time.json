@@ -1,0 +1,11 @@
+{
+    "type": "function",
+    "function": {
+        "name": "get_time",
+        "description": "get the current local timestamp (YYYY-MM-DD:Hour-Minute)",
+        "parameters": {
+            "type": "object",
+            "properties": {}
+        }
+    }
+}
