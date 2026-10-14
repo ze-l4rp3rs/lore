@@ -87,7 +87,9 @@ def source_line(
 def render_markdown(
     body: str,
     sources: list[dict],
-    problems: list[str],
+    unverified: list[dict],
+    premise: list[str],
+    missing: list[str],
     checked: bool
 ) -> str:
     out = []
@@ -97,7 +99,10 @@ def render_markdown(
     if sources:
         out += ["", "---", "**Sources**", ""]
         out.append("\n\n".join(source_line(source) for source in sources))
-    if problems:
-        out += ["", "---", "⚠ **The fact-checker flagged:**", ""]
-        out += [f"- {problem}" for problem in problems]
+    if unverified or premise:
+        out += ["", "---", "⚠ **Couldn't verify.** These were left out because the records don't clearly support them:", ""]
+        out += [f"- “{item['claim']}” ({item['reason']})" for item in unverified]
+        out += [f"- Your question assumes something the records don't support: {item}" for item in premise]
+    if missing:
+        out += ["", "**May be incomplete:** " + " ".join(missing)]
     return "\n".join(out).strip()

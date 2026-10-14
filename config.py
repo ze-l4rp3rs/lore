@@ -22,6 +22,7 @@ MAX_TOKENS = 2000
 TEMPERATURE = 0
 MAX_FIX_ROUNDS = 2  # targeted fixes after the first draft
 MAX_TOOL_STEPS = 6
+REQUIRE_QUOTES = True  # every citation must carry an exact quote from its source
 
 RUNS_FOLDER = "runs"
 
@@ -32,7 +33,8 @@ GENERATOR_PROMPT = (
 
     "CORE RULES.\n"
     "1. Use ONLY facts from the sources; never invent information.\n"
-    "2. Cite every fact: [[cite:<id>|<quote>]] where id is the source and quote proves it.\n"
+    "2. Cite every fact: [[cite:<id>|<quote>]] where id is the source and quote proves it. "
+    "The id and the quote are separated by a vertical bar |, for example [[cite:1a2b3c4d|Target date: 2026-08-15]].\n"
     "3. Quote exactly as it appears in the source; use ... to skip words.\n"
     "4. For unknown information, list it under 'Not in company records:'\n"
     "5. Be precise about relationships: distinguish owner vs assignee, author vs approver.\n"
@@ -51,13 +53,18 @@ FIX_REQUEST = (
 )
 
 REFLECTOR_PROMPT = (
-    "Fact-check this draft answer about company data against the sources.\n\n"
+    "Fact-check this draft answer about company data. Sentences are labelled [S1], [S2], etc.\n\n"
 
-    "Citations look like [[cite:<id>|<quote>]]: the fact must be stated in the source with that id.\n\n"
+    "For each sentence:\n"
+    "- true if: its cited sources state it, or it acknowledges missing data, or it's a heading/transition\n"
+    "- false if: the fact is not in cited sources, no citation given, role is wrong (author vs approver), "
+    "or it uses information the user/sources never provided\n\n"
 
-    "A problem is: a fact the cited sources do not state, a fact with no citation, a role that is wrong "
-    "(author vs approver, owner vs assignee), or information the user/sources never provided.\n\n"
+    "Report:\n"
+    "- missing: parts of the question that the sources DO answer but the draft left out. "
+    "Do not list information the sources lack when the draft already says so (e.g. under 'Not in company records:')\n"
+    "- premise: false assumptions in the question not corrected\n\n"
 
-    "Output JSON only: {\"approved\": true, \"problems\": []} where approved is false if there is any "
-    "problem, and each problem is one sentence."
+    "Output JSON only: {\"sentences\": [{\"n\": 1, \"supported\": true, \"problem\": \"\"}], \"missing\": [], "
+    "\"premise\": []} where problem is empty if supported, else one sentence."
 )
