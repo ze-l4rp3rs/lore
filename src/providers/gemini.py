@@ -28,10 +28,22 @@ def to_gemini_tools(
     for t in tools:
         function = t["function"]
         declaration: dict[str, Any] = {"name": function["name"], "description": function.get("description", "")}
-        if function.get("parameters"):
-            declaration["parameters"] = function["parameters"]
+        parameters = function.get("parameters")
+        # Gemini rejects an OBJECT schema with no properties; a no-argument tool just omits it
+        if parameters and parameters.get("properties"):
+            declaration["parameters"] = parameters
         declarations.append(declaration)
     return [{"function_declarations": declarations}]
+
+
+def _parse_arguments(
+    arguments: str
+) -> dict:
+    try:
+        parsed = json.loads(arguments or "{}")
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 
 
 def to_gemini_contents(
@@ -39,11 +51,40 @@ def to_gemini_contents(
 ) -> tuple[str, list[dict[str, Any]]]:
     # Gemini takes the system prompt separately and calls the assistant role "model"
     system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
-    contents = [
-        {"role": "model" if m["role"] == "assistant" else "user", "parts": [{"text": m["content"]}]}
-        for m in messages
-        if m["role"] != "system"
-    ]
+    contents: list[dict[str, Any]] = []
+    api_ids: dict[str, bool] = {}  # our call id -> whether Gemini issued it (else it is ours; don't send it)
+    for m in messages:
+        if m["role"] == "system":
+            continue
+        if m["role"] == "assistant":
+            role = "model"
+            parts: list[dict[str, Any]] = [{"text": m["content"]}] if m["content"].strip() else []
+            for c in m.get("tool_calls", []):
+                data = c.provider_data or {}
+                api_ids[c.id] = bool(data.get("has_id"))
+                call: dict[str, Any] = {"name": c.name, "args": _parse_arguments(c.arguments)}
+                if api_ids[c.id]:
+                    call["id"] = c.id
+                part: dict[str, Any] = {"function_call": call}
+                # Gemini 3 rejects a replayed function call without the signature it was issued with
+                if data.get("thought_signature"):
+                    part["thought_signature"] = data["thought_signature"]
+                parts.append(part)
+        elif m["role"] == "tool":
+            role = "user"
+            response: dict[str, Any] = {"name": m.get("name", ""), "response": {"result": m["content"]}}
+            if api_ids.get(m["tool_call_id"]):
+                response["id"] = m["tool_call_id"]
+            parts = [{"function_response": response}]
+        else:
+            role = "user"
+            parts = [{"text": m["content"]}]
+        if not parts:
+            continue
+        if contents and contents[-1]["role"] == role:
+            contents[-1]["parts"].extend(parts)
+        else:
+            contents.append({"role": role, "parts": parts})
     return system, contents
 
 
@@ -61,6 +102,7 @@ def complete(
     }
     if tools:
         request_config["tools"] = to_gemini_tools(tools)
+        request_config["tool_config"] = {"function_calling_config": {"mode": tool_choice.upper()}}
 
     response = client().models.generate_content(model=model, contents=contents, config=request_config)
 
@@ -75,6 +117,7 @@ def complete(
             id=p.function_call.id or "gemini_" + secrets.token_hex(4),
             name=p.function_call.name or "",
             arguments=json.dumps(dict(p.function_call.args or {})),
+            provider_data={"has_id": bool(p.function_call.id), "thought_signature": p.thought_signature},
         ))
     reason = candidate.finish_reason if candidate else None
     return Completion(text=text, tool_calls=calls, finish_reason=str(reason))

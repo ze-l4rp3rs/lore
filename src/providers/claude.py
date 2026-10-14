@@ -33,12 +33,46 @@ def to_anthropic_tools(
     ]
 
 
+def _parse_arguments(
+    arguments: str
+) -> dict:
+    try:
+        parsed = json.loads(arguments or "{}")
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
 def to_anthropic_messages(
     messages: list[Message]
 ) -> tuple[str, list[dict[str, Any]]]:
-    # Anthropic takes the system prompt separately; everything else is a plain text turn
+    # Anthropic takes the system prompt separately, tool calls as tool_use blocks,
+    # and tool results as tool_result blocks inside a user turn
     system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
-    chat = [{"role": m["role"], "content": m["content"]} for m in messages if m["role"] != "system"]
+    chat: list[dict[str, Any]] = []
+    for m in messages:
+        if m["role"] == "system":
+            continue
+        if m["role"] == "assistant":
+            role = "assistant"
+            blocks = [{"type": "text", "text": m["content"]}] if m["content"].strip() else []
+            blocks += [
+                {"type": "tool_use", "id": c.id, "name": c.name, "input": _parse_arguments(c.arguments)}
+                for c in m.get("tool_calls", [])
+            ]
+        elif m["role"] == "tool":
+            role = "user"
+            blocks = [{"type": "tool_result", "tool_use_id": m["tool_call_id"], "content": m["content"]}]
+        else:
+            role = "user"
+            blocks = [{"type": "text", "text": m["content"]}]
+        if not blocks:
+            continue
+        # turns must alternate: fold consecutive same-role messages into one
+        if chat and chat[-1]["role"] == role:
+            chat[-1]["content"].extend(blocks)
+        else:
+            chat.append({"role": role, "content": blocks})
     return system, chat
 
 
@@ -54,6 +88,7 @@ def complete(
         extra["system"] = system
     if tools:
         extra["tools"] = to_anthropic_tools(tools)
+        extra["tool_choice"] = {"type": tool_choice}
 
     response = client().messages.create(
         model=model,

@@ -102,6 +102,6 @@ def ask(
         for call in completion.tool_calls:
             trace = run_tool(call, memo, user)
             tool_trace.append(trace)
-            history.append({"role": "tool", "content": trace.result, "tool_call_id": call.id})
+            history.append({"role": "tool", "content": trace.result, "tool_call_id": call.id, "name": call.name})
 
     raise AssertionError("unreachable: the last step never allows tools")

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Callable, Literal, NotRequired, Optional, TypedDict
+from typing import Any, Callable, Literal, NotRequired, Optional, TypedDict
 
 
 @dataclass(frozen=True)
@@ -7,6 +7,7 @@ class ToolCall:
     id: str
     name: str
     arguments: str  # raw JSON text, exactly as the model wrote it
+    provider_data: Any = None  # opaque extras the provider needs back on replay (e.g. Gemini thought signatures)
 
 
 class Message(TypedDict):
@@ -14,6 +15,7 @@ class Message(TypedDict):
     content: str
     tool_calls: NotRequired[list[ToolCall]]  # assistant turn that requested tools
     tool_call_id: NotRequired[str]  # tool turn: the call it answers
+    name: NotRequired[str]  # tool turn: the tool's name (Gemini needs it)
 
 
 @dataclass

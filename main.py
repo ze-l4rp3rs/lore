@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.providers.router import select_provider
-from src.workflow.reflexion import reflexion
+from src.workflow.reflexion import run
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ask Company Brain a question.")
@@ -19,4 +19,5 @@ if __name__ == "__main__":
         context = f.read()
 
     provider = select_provider()
-    print(reflexion(provider, args.question, context))
+    result = run(provider, args.question, context)
+    print(result.markdown)

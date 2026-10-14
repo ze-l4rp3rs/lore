@@ -7,10 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from dotenv import load_dotenv
 
 import config
-from src.providers.base import Completion, Complete, Message, Provider
-
-# providers whose adapters can replay tool turns yet; the others answer without tools for now
-TOOL_CALLING = {"groq"}
+from src.providers.base import Provider
 
 
 def available_providers():
@@ -51,14 +48,6 @@ def ask_which(
         print(f"Enter a number from 1 to {len(available)}, or a provider name.")
 
 
-def _without_tools(
-    complete: Complete
-) -> Complete:
-    def call(model: str, messages: list[Message], tools: list[dict] | None = None, tool_choice: str = "auto") -> Completion:
-        return complete(model, messages, None, "none")
-    return call
-
-
 def select_provider(
     interactive: bool | None = None
 ):
@@ -81,13 +70,9 @@ def select_provider(
 
     # imported only now, so SDKs for providers you don't use never need to be installed
     module = importlib.import_module("src.providers." + name)
-    complete = module.complete
-    if name not in TOOL_CALLING:
-        print(f"Tool calling is not supported for {name} yet; answering without tools.", file=sys.stderr)
-        complete = _without_tools(module.complete)
     return Provider(
         name=name,
-        complete=complete,
+        complete=module.complete,
         generator_model=config.MODELS[name]["generator"],
         reflector_model=config.MODELS[name]["reflector"],
     )
