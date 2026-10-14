@@ -1,5 +1,22 @@
 # LLM Provider Configuration
-GROQ_MODEL = "qwen/qwen3.8-27b"
+# provider name -> env var that holds its API key (the router looks for these in .env)
+PROVIDER_KEYS = {
+    "groq": "GROQ_API_KEY",
+    "claude": "ANTHROPIC_API_KEY",
+    "gemini": "GEMINI_API_KEY",
+}
+
+# provider name -> model used for each role; a different reflector model catches more of the
+# generator's blind spots than the same model checking itself
+MODELS = {
+    "groq":   {"generator": "qwen/qwen3.8-27b",  "reflector": "qwen/qwen3.8-27b"},
+    "claude": {"generator": "claude-sonnet-5-5", "reflector": "claude-sonnet-5-5"},
+    "gemini": {"generator": "gemini-3.8-flash",  "reflector": "gemini-3.8-flash"},
+}
+
+# Default provider: used when several API keys are set and there is no terminal to ask on
+# (the API server, pipes); the DEFAULT_PROVIDER environment variable overrides it
+DEFAULT_PROVIDER = "groq"
 
 MAX_TOKENS = 2000
 TEMPERATURE = 0

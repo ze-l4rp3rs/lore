@@ -4,6 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+from src.providers.router import select_provider
 from src.workflow.reflexion import reflexion
 
 if __name__ == "__main__":
@@ -17,4 +18,5 @@ if __name__ == "__main__":
     with open(args.context, encoding="utf-8") as f:
         context = f.read()
 
-    print(reflexion(args.question, context))
+    provider = select_provider()
+    print(reflexion(provider, args.question, context))
