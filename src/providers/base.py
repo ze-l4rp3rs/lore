@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass, field
 from typing import Any, Callable, Literal, NotRequired, Optional, TypedDict
 
@@ -16,6 +17,17 @@ class Message(TypedDict):
     tool_calls: NotRequired[list[ToolCall]]  # assistant turn that requested tools
     tool_call_id: NotRequired[str]  # tool turn: the call it answers
     name: NotRequired[str]  # tool turn: the tool's name (Gemini needs it)
+
+
+def parse_arguments(
+    arguments: str
+) -> dict:
+    # a tool call's raw JSON text as a dict; anything that is not a JSON object becomes {}
+    try:
+        parsed = json.loads(arguments or "{}")
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 
 
 @dataclass

@@ -6,8 +6,10 @@ from typing import Any, Callable
 
 _HERE = os.path.dirname(__file__)
 
-# A tool is a plain function plus a <name>.json schema next to it. A tool that declares a `user`
-# parameter receives the asking user's identity and must only return what that user may see.
+# A tool is a plain function plus a <name>.json schema next to it. Graph tools return Evidence (one per
+# graph row or node) so each becomes its own citable source, and raise on failure (an error is never a
+# source). A tool that declares a `user` parameter receives the asking user's identity and must only
+# return what that user may see.
 
 
 def get_time() -> str:
@@ -15,8 +17,15 @@ def get_time() -> str:
     return now.strftime("%Y-%m-%d:%H-%M")
 
 
+def falkordb_query(query: str):
+    # imported on first use, so the database driver is only needed when the tool is called
+    from src.tools.falkordb_query import falkordb_query as _query
+    return _query(query)
+
+
 AVAILABLE_FUNCTIONS: dict[str, Callable[..., Any]] = {
     "get_time": get_time,
+    "falkordb_query": falkordb_query,
 }
 
 

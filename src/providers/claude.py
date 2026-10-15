@@ -6,7 +6,7 @@ from typing import Any
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
-from src.providers.base import Completion, Message, ToolCall
+from src.providers.base import Completion, Message, ToolCall, parse_arguments
 
 _client = None
 
@@ -33,16 +33,6 @@ def to_anthropic_tools(
     ]
 
 
-def _parse_arguments(
-    arguments: str
-) -> dict:
-    try:
-        parsed = json.loads(arguments or "{}")
-    except json.JSONDecodeError:
-        return {}
-    return parsed if isinstance(parsed, dict) else {}
-
-
 def to_anthropic_messages(
     messages: list[Message]
 ) -> tuple[str, list[dict[str, Any]]]:
@@ -57,7 +47,7 @@ def to_anthropic_messages(
             role = "assistant"
             blocks = [{"type": "text", "text": m["content"]}] if m["content"].strip() else []
             blocks += [
-                {"type": "tool_use", "id": c.id, "name": c.name, "input": _parse_arguments(c.arguments)}
+                {"type": "tool_use", "id": c.id, "name": c.name, "input": parse_arguments(c.arguments)}
                 for c in m.get("tool_calls", [])
             ]
         elif m["role"] == "tool":

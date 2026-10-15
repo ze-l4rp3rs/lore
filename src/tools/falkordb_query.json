@@ -1,0 +1,17 @@
+{
+  "type": "function",
+  "function": {
+    "name": "falkordb_query",
+    "description": "Query the company graph (people, teams, projects, tickets, documents, decisions, chat messages and how they connect). Accepts a natural-language request or a read-only Cypher query; every result row is a citable source.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "What to search for, or read-only Cypher. Examples: 'Who owns <project name>', 'List all decisions', 'budget cut', 'MATCH (d:Decision) WHERE d.status = \"Active\" RETURN d.key, d.title'"
+        }
+      },
+      "required": ["query"]
+    }
+  }
+}

@@ -66,7 +66,7 @@ def select_provider(
         name = ask_which(available)
     else:
         name = default_provider(available)
-    print(f"Using provider: {name}", file=sys.stderr)
+    print(f"Using provider: {name}")
 
     # imported only now, so SDKs for providers you don't use never need to be installed
     module = importlib.import_module("src.providers." + name)

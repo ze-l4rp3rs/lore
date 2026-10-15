@@ -1,0 +1,19 @@
+# FalkorDB with its browser UI. Start it with scripts/db.sh up and stop it with scripts/db.sh down.
+services:
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: lore-falkordb
+    ports:
+      # bound to this machine only; change the host side with FALKORDB_PORT / FALKORDB_BROWSER_PORT
+      - "127.0.0.1:${FALKORDB_PORT:-6379}:6379"     # database
+      - "127.0.0.1:${FALKORDB_BROWSER_PORT:-3000}:3000"  # browser UI
+    volumes:
+      - falkordb_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  falkordb_data:

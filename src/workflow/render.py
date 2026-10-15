@@ -5,7 +5,7 @@ from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from src.validations import CITATION_RE, SourceRegistry, clean_quote
+from src.validations import CITATION_RE, Source, SourceRegistry, clean_quote
 
 # source type -> display name
 SOURCE_TYPES = {
@@ -17,6 +17,12 @@ SOURCE_TYPES = {
     "email": "Email",
     "meeting": "Meeting",
     "tool": "System",
+    "query_result": "Graph result",
+    "slackmessage": "Chat",
+    "person": "Person",
+    "team": "Team",
+    "project": "Project",
+    "decision": "Decision",
 }
 
 
@@ -38,12 +44,14 @@ def number_citations(
     # tokens become [1], [2]... in order of first use; returns the body and the cited sources
     numbers: dict[str, int] = {}
     quotes: dict[str, list[str]] = {}
+    cited_sources: dict[str, Source] = {}
 
     def replace(match: re.Match) -> str:
         source = registry.by_id(match.group(1))
         if source is None:
             return ""  # never reached for a checked draft; don't show a broken marker
         number = numbers.setdefault(source.id, len(numbers) + 1)
+        cited_sources[source.id] = source
         quote = clean_quote(match.group(2))
         if quote and quote not in quotes.setdefault(source.id, []):
             quotes[source.id].append(quote)
@@ -56,10 +64,10 @@ def number_citations(
 
     cited = []
     for source_id, number in numbers.items():
-        source = registry.by_id(source_id)
+        source = cited_sources[source_id]
         cited.append({
             "number": number,
-            "id": source.id,
+            "id": source_id,
             "type": source.kind,
             "label": source.label,
             "date": source.date,

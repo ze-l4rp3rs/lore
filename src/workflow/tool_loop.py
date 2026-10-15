@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 import config
 from src.providers.base import Message, ModelReply, Provider, ToolCall, ToolMemo, ToolTrace
 from src.tools import AVAILABLE_FUNCTIONS, TOOL_SCHEMAS, call_tool
-from src.validations import Evidence, Source, SourceRegistry, render_sources
+from src.validations import Evidence, Note, Source, SourceRegistry, render_sources
 
 _THINK_BLOCK = re.compile(r"<(think|thinking)>.*?</\1>", re.IGNORECASE | re.DOTALL)
 _THINK_END = re.compile(r"</(?:think|thinking)>", re.IGNORECASE)
@@ -48,14 +48,16 @@ def register_result(
     arguments: dict,
     result: Any,
     registry: SourceRegistry
-) -> list[Source]:
-    # every tool result becomes citable: one source per Evidence item, otherwise one for the whole result
-    if isinstance(result, Evidence):
+) -> tuple[list[Source], list[str]]:
+    # every tool result becomes citable: one source per Evidence item, otherwise one for the whole result;
+    # a Note in the list is shown to the model but is not a source
+    if isinstance(result, (Evidence, Note)):
         result = [result]
-    if isinstance(result, list) and all(isinstance(item, Evidence) for item in result):
-        return [registry.add(item) for item in result]
+    if isinstance(result, list) and all(isinstance(item, (Evidence, Note)) for item in result):
+        sources = [registry.add(item) for item in result if isinstance(item, Evidence)]
+        return sources, [item.text for item in result if isinstance(item, Note)]
     label = f"{name}({json.dumps(arguments, ensure_ascii=False)})" if arguments else name
-    return [registry.add(Evidence(kind="tool", label=label, text=str(result)))]
+    return [registry.add(Evidence(kind="tool", label=label, text=str(result)))], []
 
 
 def run_tool(
@@ -77,7 +79,7 @@ def run_tool(
             return replace(memo[key], cached=True, duration_ms=0)
         if call.name not in AVAILABLE_FUNCTIONS:
             raise KeyError(f"unknown tool {call.name!r}")
-        sources = register_result(call.name, arguments, call_tool(call.name, arguments, user), registry)
+        sources, notes = register_result(call.name, arguments, call_tool(call.name, arguments, user), registry)
     except Exception as caught:
         # never let a bad or unknown tool call kill the run; tell the model instead (and don't memoize)
         error = f"{type(caught).__name__}: {caught}"
@@ -93,7 +95,7 @@ def run_tool(
     trace = ToolTrace(
         name=call.name,
         arguments=arguments,
-        result=render_sources(sources) if sources else "(no results)",
+        result="\n".join(([render_sources(sources)] if sources else ["(no results)"] if not notes else []) + notes),
         source_ids=tuple(source.id for source in sources),
         duration_ms=int((time.perf_counter() - started) * 1000),
     )

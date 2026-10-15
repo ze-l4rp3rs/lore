@@ -10,11 +10,13 @@ from src.validations.sources import SourceRegistry
 # [[cite:<id>]] or [[cite:<id>|<words copied exactly from that source>]]; models drift to other
 # separators (# > -> :), so those are accepted here and rewritten to "|" by repair_citations
 _SEPARATORS = r"[|#>→:]"
-CITATION_RE = re.compile(r"\[\[cite:([0-9a-f]{8})(?:" + _SEPARATORS + r"(.+?))?\]\]")
+_ID = r"([0-9a-f]{8})"  # sources.py makes ids with secrets.token_hex(4)
+# the closing ]] must not be followed by another ], so a quote that itself ends in "]" keeps it
+CITATION_RE = re.compile(r"\[\[cite:" + _ID + r"(?:" + _SEPARATORS + r"(.+?))?\]\](?!\])")
 
 # near-miss syntax we can fix without asking the model: one bracket short on either side
-_SHORT_CLOSE = re.compile(r"\[\[cite:([0-9a-f]{8})(" + _SEPARATORS + r"[^\[\]\n]*?)?\](?!\])")
-_SHORT_OPEN = re.compile(r"(?<!\[)\[cite:([0-9a-f]{8})(" + _SEPARATORS + r"[^\[\]\n]*?)?\]\]")
+_SHORT_CLOSE = re.compile(r"\[\[cite:" + _ID + r"(" + _SEPARATORS + r"[^\[\]\n]*?)?\](?!\])")
+_SHORT_OPEN = re.compile(r"(?<!\[)\[cite:" + _ID + r"(" + _SEPARATORS + r"[^\[\]\n]*?)?\]\]")
 
 _ELLIPSIS = re.compile(r"\s*(?:\.\.\.|…)\s*")
 _FOLD = str.maketrans({

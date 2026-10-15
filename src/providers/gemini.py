@@ -7,7 +7,7 @@ from typing import Any
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
-from src.providers.base import Completion, Message, ToolCall
+from src.providers.base import Completion, Message, ToolCall, parse_arguments
 
 _client = None
 
@@ -36,16 +36,6 @@ def to_gemini_tools(
     return [{"function_declarations": declarations}]
 
 
-def _parse_arguments(
-    arguments: str
-) -> dict:
-    try:
-        parsed = json.loads(arguments or "{}")
-    except json.JSONDecodeError:
-        return {}
-    return parsed if isinstance(parsed, dict) else {}
-
-
 def to_gemini_contents(
     messages: list[Message]
 ) -> tuple[str, list[dict[str, Any]]]:
@@ -62,7 +52,7 @@ def to_gemini_contents(
             for c in m.get("tool_calls", []):
                 data = c.provider_data or {}
                 api_ids[c.id] = bool(data.get("has_id"))
-                call: dict[str, Any] = {"name": c.name, "args": _parse_arguments(c.arguments)}
+                call: dict[str, Any] = {"name": c.name, "args": parse_arguments(c.arguments)}
                 if api_ids[c.id]:
                     call["id"] = c.id
                 part: dict[str, Any] = {"function_call": call}

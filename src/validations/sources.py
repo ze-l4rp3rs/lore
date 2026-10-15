@@ -28,6 +28,13 @@ class Evidence:
 
 
 @dataclass(frozen=True)
+class Note:
+    """A message about a tool result (for example "more rows matched"). The model reads it with the
+    result, but it is never a source, so it can never be cited."""
+    text: str
+
+
+@dataclass(frozen=True)
 class Source:
     id: str  # per-run random id the model cites
     kind: str

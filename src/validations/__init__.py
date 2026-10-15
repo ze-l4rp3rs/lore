@@ -6,6 +6,7 @@ from src.validations.checks import Draft, mechanical_issues, parse_draft, strip_
 from src.validations.citations import CITATION_RE, clean_quote, quote_in_source, repair_citations
 from src.validations.sources import (
     Evidence,
+    Note,
     Source,
     SourceRegistry,
     build_registry,
@@ -23,6 +24,7 @@ __all__ = [
     "quote_in_source",
     "repair_citations",
     "Evidence",
+    "Note",
     "Source",
     "SourceRegistry",
     "build_registry",

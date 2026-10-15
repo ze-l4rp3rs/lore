@@ -14,6 +14,21 @@ python main.py -c orion.txt "Who owns the Keycloak rollout?"
 - The CLI prints the structured JSON response (see [Response](#response)). The readable version, with
   numbered footnotes, is written to `runs/*.md`.
 
+To query the company graph instead of a context file, start FalkorDB, load the dataset, then ask:
+
+```bash
+scripts/db.sh up        # FalkorDB on localhost:6379, browser UI on http://localhost:3000
+scripts/db.sh ingest    # loads company_brain_dataset.json
+python main.py "Who owns the Platform Redesign project?"
+scripts/db.sh down      # clean exit (keeps the data); `scripts/db.sh reset` also deletes it
+```
+
+- The ingest script **clears the whole `company_brain` graph** before loading, so a second run rebuilds
+  the same graph. Point `FALKORDB_GRAPH_NAME` in `config.py` elsewhere if that name is already in use.
+- If port 6379 or 3000 is taken, set `FALKORDB_PORT` / `FALKORDB_BROWSER_PORT` (and `FALKORDB_URL` for the
+  agent). The ports are bound to `localhost` only, and the image has no password.
+- With no context file and no database, the model has nothing to answer from.
+
 Provider selection:
 - One API key set: that provider is used.
 - Several keys and a terminal: you are asked which one.
@@ -27,36 +42,41 @@ The project follows the 15 steps in [docs/build-plan.md](docs/build-plan.md); de
 
 **Done**
 - Question answering over a context file (generator and reflector models) with fix rounds.
-- Tool calling with a registry, a bounded loop and a per-run tool memo. One tool exists: `get_time`.
+- Tool calling with a registry, a bounded loop and a per-run tool memo. Two tools: `get_time` and `falkordb_query`.
 - Three provider adapters (Groq, Claude, Gemini) with tool calling, and automatic provider selection.
 - Citations: every fact carries a checked quote, and the answer is rendered with numbered footnotes.
 - Verification: code-side citation checks, then a per-sentence review by the reflector. Unsupported
   sentences are removed and listed.
 - Structured response (`src/api/response.py`) and JSON plus markdown run logs.
+- FalkorDB graph: client, schema, idempotent ingestion of `company_brain_dataset.json` (the synthetic
+  "Meridian" company: 144 nodes, 321 edges), run through `docker-compose.yml` and `scripts/db.sh`.
+- `falkordb_query` tool: natural language or read-only Cypher. A row that is one node becomes a source of
+  its real type, title, date and node id, so the same node found twice is one source.
+- Checked live on Groq against the running graph: questions on ownership and on budget decisions
+  (superseded and active) came back `verified` with correct citations.
 
-**Next: FalkorDB and synthetic data** (build-plan steps 9 and 10)
-1. **Synthetic company dataset** with deliberate traps: superseded and contradicting decisions,
-   reassignments, a strategy document that later decisions made stale, dissent, and a question with a
-   false premise. Include dataset checks (section counts, every reference resolves).
-2. **FalkorDB as the graph database**, run in a container with a health check. Keys are supplied at run
-   time, never built into an image.
-3. **Graph client** (`src/retrieval/`): read-only, parameterised queries that return named fields. Writes
-   go through a separate, ingestion-only path.
-4. **Ingestion** (`src/ingestion/`): loads the dataset into the graph. A second run must change nothing,
-   and everything written must appear in the graph schema description ([docs/schema.md](docs/schema.md),
-   [docs/ingestion.md](docs/ingestion.md)).
-5. **Graph tools** ([docs/tools.md](docs/tools.md)): general graph search, ownership lookup, expertise
-   lookup, decision tracing and timelines. Each returns `Evidence` items, so every graph record becomes
-   a citable source.
+**Next: graph tools** (build-plan step 10; see [docs/tools.md](docs/tools.md))
+- Dedicated tools on top of the graph: ownership lookup, expertise lookup, decision tracing (what
+  superseded or contradicted what) and timelines. Today the model has one general `falkordb_query` tool.
+- Check the generator against the dataset's traps: superseded decisions, reassignments, a stale strategy
+  document, dissent, and a question with a false premise.
+- Turn the graph records into richer evidence (a decision's rationale and status, a change's old and new
+  value) and carry the current/superseded status through to the response.
 
 **Later:** web API, a configuration file, history and freshness status, incremental updates, evaluation
 and proposed actions (steps 8 and 11 to 15).
 
 **Known gaps**
-- There are no automated tests in the repo yet. The build plan calls for tests against simulated models,
+- [x] The model can query the graph: `falkordb_query` returns graph nodes as typed, citable sources.
+- [ ] There are no automated tests in the repo yet. The build plan calls for tests against simulated models,
   never a real model service.
-- Only one tool exists, and its output isn't graph data yet.
-- The Groq free tier is rate limited, so a run can pause and retry.
+- [ ] `falkordb_query` routes natural language to a few fixed query shapes (owners, people involved, list by
+  type, keyword search); anything else is a keyword search or raw read-only Cypher.
+- [ ] Rows made of columns (for example `RETURN d.key, d.title`) stay generic "Graph result" sources, because
+  they are not one node.
+- [ ] Ingestion always rebuilds the graph. Incremental updates are a later step.
+- [ ] A run on Groq's free tier can take minutes, because of rate-limit waits.
+- [ ] The generator sometimes writes "Not in company records: none" instead of leaving the heading out.
 
 ## Architecture
 
@@ -81,8 +101,8 @@ main.py ──► select_provider ──► run(provider, question, context) ─
 | `src/providers/base.py` | Data classes and types shared by everything else |
 | `src/providers/{groq,claude,gemini}.py` | One adapter each, exposing a single `complete(...)` |
 | `src/providers/router.py` | Chooses a provider from the keys available; loads only that SDK |
-| `src/tools/` | Tool registry: a function plus a `<name>.json` schema next to it |
-| `src/validations/sources.py` | `Evidence`, `Source`, `SourceRegistry`; renders sources as `<source id=...>` blocks |
+| `src/tools/` | Tool registry: a function plus a `<name>.json` schema next to it (`get_time`, `falkordb_query`) |
+| `src/validations/sources.py` | `Evidence`, `Note`, `Source`, `SourceRegistry`; renders sources as `<source id=...>` blocks |
 | `src/validations/citations.py` | Citation syntax: the `[[cite:<id>\|<quote>]]` pattern, quote matching, syntax repair |
 | `src/validations/checks.py` | Splits a draft into numbered sentences and finds problems code can prove |
 | `src/workflow/tool_loop.py` | `ask(...)`: the bounded model → tools → model loop |
@@ -90,7 +110,13 @@ main.py ──► select_provider ──► run(provider, question, context) ─
 | `src/workflow/render.py` | Numbers citations and renders the readable markdown with a source list |
 | `src/api/response.py` | `build_response(result)`: the one JSON shape the CLI (and later the API) returns |
 | `src/storage/run_logger.py` | Writes each run as JSON plus markdown |
-| `src/ingestion/`, `src/retrieval/` | Empty. Reserved for the graph work above |
+| `src/retrieval/falkordb_client.py` | `FalkorDBClient`: parameterised read-only `query()` returning dict rows, and a separate `write()` used only by ingestion |
+| `src/tools/falkordb_query.py` | The graph tool: natural language or read-only Cypher in, one `Evidence` per row out (plus a `Note` when the result is cut off) |
+| `schema.py` | Node labels, edge types and which dataset fields become which edges. Ingestion reads most of it; the tool reads the name and date properties |
+| `scripts/ingest_company_data.py` | Loads the dataset into FalkorDB: `MERGE` on ids through `UNWIND` with parameters |
+| `company_brain_dataset.json` | The synthetic company dataset |
+| `docker-compose.yml`, `scripts/db.sh` | FalkorDB with a health check and its browser UI; `db.sh` starts, loads, stops and resets it |
+| `src/ingestion/` | Empty. Reserved for the later ingestion work |
 
 ## Data classes
 
@@ -106,6 +132,7 @@ Defined in [src/providers/base.py](src/providers/base.py) unless noted.
 | `ToolMemo` | `dict[str, ToolTrace]` | key = tool name + sorted-JSON arguments | One result per (name, arguments) for a whole run |
 | `Provider` | frozen dataclass | `name`, `complete`, `generator_model`, `reflector_model` | The chosen provider and its models |
 | `Evidence` | frozen dataclass (`sources.py`) | `kind`, `label`, `text`, `date`, `url`, `ref`, `meta` | What a tool returns: one citable piece of text |
+| `Note` | frozen dataclass (`sources.py`) | `text` | A message about a tool result (e.g. "more rows matched"). The model reads it, but it is never a source, so it can't be cited |
 | `Source` | frozen dataclass (`sources.py`) | the `Evidence` fields plus a per-run random `id` | An entry in the registry; the id is what the model cites |
 | `SourceRegistry` | dataclass (`sources.py`) | `sources`, `add()`, `by_id()` | All citable sources of one run. The same `ref` maps to the same source |
 | `Draft` | dataclass (`checks.py`) | `text`, `lines`, `numbered` | An answer split into lines and numbered sentences `S1, S2, ...` |
@@ -138,14 +165,20 @@ including tool turns, so the loop works the same through every provider:
   source text are neutralised.
 - The model cites every fact as `[[cite:<id>|<exact quote>]]`. Quotes may use `...` to skip words.
 - Tool results become sources too: an `Evidence` item becomes its own source, any other result becomes
-  one source holding the whole result. Failures never become sources.
+  one source holding the whole result. A `Note` in the list is shown to the model after the sources but
+  is never registered. Failures never become sources.
+- Graph rows: a row that is one node becomes `Evidence` of that node's type (`decision`, `project`, ...),
+  titled by its name, title, key or channel, dated from its own date property, and identified by its node
+  id. Any other row is a `query_result` identified by a hash of its text.
+- A citation's closing `]]` must not be followed by another `]`, so a quote that itself ends in `]` stays
+  whole.
 
 ### Tool loop (`ask`)
 
 `ask(provider, model, messages, registry, memo=None, user=None, use_tools=True) -> ModelReply`:
 - Works on a copy of `messages`; the caller's list is never mutated.
 - Each step calls `complete()`. If the model asks for tools, each `ToolCall` runs through `run_tool`,
-  registers its result in the registry and appends it as a `tool` message. After `MAX_TOOL_STEPS` the
+  registers its result in the registry and appends it as a `tool` message (sources first, then any notes). After `MAX_TOOL_STEPS` the
   last call has tools disabled, so the model must answer.
 - Text written next to a tool call is dropped. The model must write the whole answer after the results.
 - A bad call doesn't crash the run. An unknown tool, malformed arguments or a tool that raises becomes a
