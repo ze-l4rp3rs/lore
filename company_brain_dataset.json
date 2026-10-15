@@ -1,0 +1,4271 @@
+{
+  "metadata": {
+    "company": "Meridian (fictional)",
+    "date_range": "2026-01-01 to 2026-05-12",
+    "id_conventions": "p#=people, team_###, proj_###, ticket_### (key PROJ-###), doc_###, dec_### (key DEC-###), slack_msg_###",
+    "note": "Every history entry and decision carries a 'sources' list of slack/doc/decision ids for traceability."
+  },
+  "people": [
+    {
+      "id": "p1",
+      "name": "Alice Chen",
+      "email": "alice.chen@meridian.example",
+      "role": "CEO",
+      "department": "Executive",
+      "start_date": "2019-03-01",
+      "reports_to": null,
+      "team_id": null
+    },
+    {
+      "id": "p2",
+      "name": "Bob Smith",
+      "email": "bob.smith@meridian.example",
+      "role": "CTO",
+      "department": "Engineering",
+      "start_date": "2019-06-15",
+      "reports_to": "p1",
+      "team_id": null
+    },
+    {
+      "id": "p3",
+      "name": "Carol White",
+      "email": "carol.white@meridian.example",
+      "role": "CFO",
+      "department": "Finance",
+      "start_date": "2020-01-13",
+      "reports_to": "p1",
+      "team_id": "team_005"
+    },
+    {
+      "id": "p4",
+      "name": "Maya Patel",
+      "email": "maya.patel@meridian.example",
+      "role": "Senior Financial Analyst",
+      "department": "Finance",
+      "start_date": "2021-04-05",
+      "reports_to": "p3",
+      "team_id": "team_005"
+    },
+    {
+      "id": "p5",
+      "name": "Charlie Park",
+      "email": "charlie.park@meridian.example",
+      "role": "VP Engineering",
+      "department": "Engineering",
+      "start_date": "2020-08-17",
+      "reports_to": "p2",
+      "team_id": "team_001"
+    },
+    {
+      "id": "p6",
+      "name": "Ian Kumar",
+      "email": "ian.kumar@meridian.example",
+      "role": "Senior Engineer",
+      "department": "Engineering",
+      "start_date": "2021-02-01",
+      "reports_to": "p5",
+      "team_id": "team_001"
+    },
+    {
+      "id": "p7",
+      "name": "Jack Liu",
+      "email": "jack.liu@meridian.example",
+      "role": "Senior Engineer",
+      "department": "Engineering",
+      "start_date": "2021-09-13",
+      "reports_to": "p5",
+      "team_id": "team_001"
+    },
+    {
+      "id": "p8",
+      "name": "Diana Chen",
+      "email": "diana.chen@meridian.example",
+      "role": "Senior Engineer",
+      "department": "Engineering",
+      "start_date": "2022-01-10",
+      "reports_to": "p5",
+      "team_id": "team_001"
+    },
+    {
+      "id": "p9",
+      "name": "Karen Martinez",
+      "email": "karen.martinez@meridian.example",
+      "role": "Senior Engineer",
+      "department": "Engineering",
+      "start_date": "2022-05-02",
+      "reports_to": "p5",
+      "team_id": "team_001"
+    },
+    {
+      "id": "p10",
+      "name": "Frank Thompson",
+      "email": "frank.thompson@meridian.example",
+      "role": "VP Product",
+      "department": "Product",
+      "start_date": "2020-11-02",
+      "reports_to": "p1",
+      "team_id": "team_002"
+    },
+    {
+      "id": "p11",
+      "name": "Eve Williams",
+      "email": "eve.williams@meridian.example",
+      "role": "Product Manager",
+      "department": "Product",
+      "start_date": "2021-07-19",
+      "reports_to": "p10",
+      "team_id": "team_002"
+    },
+    {
+      "id": "p12",
+      "name": "Nina Rossi",
+      "email": "nina.rossi@meridian.example",
+      "role": "Senior Designer",
+      "department": "Product",
+      "start_date": "2022-03-14",
+      "reports_to": "p10",
+      "team_id": "team_002"
+    },
+    {
+      "id": "p13",
+      "name": "Leo Chen",
+      "email": "leo.chen@meridian.example",
+      "role": "Product Designer",
+      "department": "Product",
+      "start_date": "2023-02-06",
+      "reports_to": "p10",
+      "team_id": "team_002"
+    },
+    {
+      "id": "p14",
+      "name": "Grace Davis",
+      "email": "grace.davis@meridian.example",
+      "role": "Engineering Manager, Analytics",
+      "department": "Analytics",
+      "start_date": "2021-10-04",
+      "reports_to": "p2",
+      "team_id": "team_003"
+    },
+    {
+      "id": "p15",
+      "name": "Omar Hassan",
+      "email": "omar.hassan@meridian.example",
+      "role": "Engineer",
+      "department": "Analytics",
+      "start_date": "2023-06-12",
+      "reports_to": "p14",
+      "team_id": "team_003"
+    },
+    {
+      "id": "p16",
+      "name": "Priya Nair",
+      "email": "priya.nair@meridian.example",
+      "role": "Engineer",
+      "department": "Analytics",
+      "start_date": "2024-01-08",
+      "reports_to": "p14",
+      "team_id": "team_003"
+    },
+    {
+      "id": "p17",
+      "name": "Harry Jenkins",
+      "email": "harry.jenkins@meridian.example",
+      "role": "Head of Operations (Infrastructure)",
+      "department": "Infrastructure",
+      "start_date": "2020-09-21",
+      "reports_to": "p2",
+      "team_id": "team_004"
+    },
+    {
+      "id": "p18",
+      "name": "Quinn Foster",
+      "email": "quinn.foster@meridian.example",
+      "role": "Engineer",
+      "department": "Infrastructure",
+      "start_date": "2023-09-18",
+      "reports_to": "p17",
+      "team_id": "team_004"
+    },
+    {
+      "id": "p19",
+      "name": "Raj Mehta",
+      "email": "raj.mehta@meridian.example",
+      "role": "Engineer",
+      "department": "Infrastructure",
+      "start_date": "2024-04-01",
+      "reports_to": "p17",
+      "team_id": "team_004"
+    },
+    {
+      "id": "p20",
+      "name": "Sam Okafor",
+      "email": "sam.okafor@meridian.example",
+      "role": "Financial Analyst",
+      "department": "Finance",
+      "start_date": "2024-02-05",
+      "reports_to": "p3",
+      "team_id": "team_005"
+    }
+  ],
+  "teams": [
+    {
+      "id": "team_001",
+      "name": "Platform Engineering",
+      "lead_id": "p5",
+      "member_ids": [
+        "p6",
+        "p7",
+        "p8",
+        "p9"
+      ]
+    },
+    {
+      "id": "team_002",
+      "name": "Product",
+      "lead_id": "p10",
+      "member_ids": [
+        "p11",
+        "p12",
+        "p13"
+      ]
+    },
+    {
+      "id": "team_003",
+      "name": "Analytics",
+      "lead_id": "p14",
+      "member_ids": [
+        "p15",
+        "p16"
+      ]
+    },
+    {
+      "id": "team_004",
+      "name": "Infrastructure",
+      "lead_id": "p17",
+      "member_ids": [
+        "p18",
+        "p19"
+      ]
+    },
+    {
+      "id": "team_005",
+      "name": "Finance/Operations",
+      "lead_id": "p3",
+      "member_ids": [
+        "p4",
+        "p20"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_001",
+      "name": "Platform Redesign",
+      "department": "Engineering",
+      "owner_id": "p8",
+      "sponsor_id": "p2",
+      "status": "In Progress",
+      "priority": "High",
+      "scope": "Performance optimization only (existing DB retained, API extended)",
+      "budget_usd": 400000,
+      "target_end": "2026-11-20",
+      "ticket_ids": [
+        "ticket_001",
+        "ticket_009"
+      ],
+      "decision_ids": [
+        "dec_001",
+        "dec_002",
+        "dec_003"
+      ],
+      "document_ids": [
+        "doc_001",
+        "doc_002",
+        "doc_004",
+        "doc_005"
+      ],
+      "history": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 500000,
+          "changed_by": "p1",
+          "reason": "Initial budget in 2026 Strategy v1",
+          "sources": [
+            "doc_001",
+            "slack_msg_076"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T00:00:00Z",
+          "field": "status",
+          "old_value": null,
+          "new_value": "Approved",
+          "changed_by": "p1",
+          "reason": "Approved: $500K, 6 months, led by Bob",
+          "sources": [
+            "dec_001",
+            "doc_004"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T00:00:00Z",
+          "field": "owner_id",
+          "old_value": null,
+          "new_value": "p2",
+          "changed_by": "p1",
+          "reason": "Led by Bob per DEC-001",
+          "sources": [
+            "dec_001"
+          ]
+        },
+        {
+          "timestamp": "2026-03-01T00:00:00Z",
+          "field": "status",
+          "old_value": "Approved",
+          "new_value": "In Progress",
+          "changed_by": "p1",
+          "reason": "Kickoff announced in Slack",
+          "sources": [
+            "slack_msg_001"
+          ]
+        },
+        {
+          "timestamp": "2026-03-02T00:00:00Z",
+          "field": "engineers_allocated",
+          "old_value": null,
+          "new_value": 4,
+          "changed_by": "p2",
+          "reason": "Bob allocates 4 engineers",
+          "sources": [
+            "slack_msg_002",
+            "slack_msg_004"
+          ]
+        },
+        {
+          "timestamp": "2026-03-12T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": 500000,
+          "new_value": 250000,
+          "changed_by": "p3",
+          "reason": "Q1 shortfall",
+          "sources": [
+            "dec_002",
+            "slack_msg_080",
+            "slack_msg_014"
+          ]
+        },
+        {
+          "timestamp": "2026-03-15T00:00:00Z",
+          "field": "scope",
+          "old_value": "Complete backend refactor (new DB, new API)",
+          "new_value": "Performance optimization only",
+          "changed_by": "p5",
+          "reason": "Descoped",
+          "sources": [
+            "slack_msg_021",
+            "slack_msg_022",
+            "doc_005"
+          ]
+        },
+        {
+          "timestamp": "2026-03-18T00:00:00Z",
+          "field": "engineers_allocated",
+          "old_value": 4,
+          "new_value": 3,
+          "changed_by": "p8",
+          "reason": "Diana leads with 3 engineers",
+          "sources": [
+            "slack_msg_025"
+          ]
+        },
+        {
+          "timestamp": "2026-03-20T00:00:00Z",
+          "field": "owner_id",
+          "old_value": "p2",
+          "new_value": "p8",
+          "changed_by": "p1",
+          "reason": "Diana leads; Bob remains sponsor",
+          "sources": [
+            "slack_msg_025",
+            "slack_msg_027",
+            "slack_msg_023"
+          ]
+        },
+        {
+          "timestamp": "2026-03-20T00:00:00Z",
+          "field": "target_end",
+          "old_value": "2026-08-01",
+          "new_value": "2026-11-20",
+          "changed_by": "p1",
+          "reason": "Timeline 6 to 8 months",
+          "sources": [
+            "slack_msg_027",
+            "doc_005"
+          ]
+        },
+        {
+          "timestamp": "2026-04-05T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": 250000,
+          "new_value": 400000,
+          "changed_by": "p1",
+          "reason": "Restored to $400K",
+          "sources": [
+            "dec_003",
+            "slack_msg_032",
+            "slack_msg_084",
+            "slack_msg_085"
+          ]
+        },
+        {
+          "timestamp": "2026-04-06T00:00:00Z",
+          "field": "engineers_allocated",
+          "old_value": 3,
+          "new_value": 4,
+          "changed_by": "p2",
+          "reason": "Ian rejoins after audit scoping",
+          "sources": [
+            "slack_msg_034"
+          ]
+        },
+        {
+          "timestamp": "2026-05-01T00:00:00Z",
+          "field": "budget_effective_in_finance_system",
+          "old_value": 250000,
+          "new_value": 400000,
+          "changed_by": "p3",
+          "reason": "Finance system updated to the DEC-003 amount (project restored to $400K in May)",
+          "sources": [
+            "dec_003"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_002",
+      "name": "Mobile App v2",
+      "department": "Product",
+      "owner_id": "p11",
+      "sponsor_id": "p10",
+      "status": "Cancelled",
+      "priority": "High",
+      "scope": "Mobile App v2",
+      "budget_usd": null,
+      "target_end": null,
+      "ticket_ids": [
+        "ticket_002"
+      ],
+      "decision_ids": [
+        "dec_004",
+        "dec_005"
+      ],
+      "document_ids": [
+        "doc_001",
+        "doc_002"
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-20T00:00:00Z",
+          "field": "launch_target",
+          "old_value": null,
+          "new_value": "Q2 2026",
+          "changed_by": "p1",
+          "reason": "Greenlit",
+          "sources": [
+            "slack_msg_036",
+            "slack_msg_039"
+          ]
+        },
+        {
+          "timestamp": "2026-03-10T00:00:00Z",
+          "field": "launch_target",
+          "old_value": "Q2 2026",
+          "new_value": "Q3 2026",
+          "changed_by": "p1",
+          "reason": "Design complexity",
+          "sources": [
+            "dec_004",
+            "slack_msg_044",
+            "slack_msg_046"
+          ]
+        },
+        {
+          "timestamp": "2026-04-01T00:00:00Z",
+          "field": "status",
+          "old_value": "Delayed",
+          "new_value": "Cancelled",
+          "changed_by": "p1",
+          "reason": "Platform more strategic; Frank dissents",
+          "sources": [
+            "dec_005",
+            "slack_msg_054",
+            "slack_msg_055",
+            "slack_msg_057",
+            "slack_msg_082",
+            "slack_msg_083"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_003",
+      "name": "Analytics Dashboard",
+      "department": "Analytics",
+      "owner_id": "p14",
+      "sponsor_id": "p1",
+      "status": "Closed",
+      "priority": "Critical",
+      "scope": "Replaced by vendor SaaS; now an integration ticket",
+      "budget_usd": null,
+      "target_end": null,
+      "ticket_ids": [
+        "ticket_003",
+        "ticket_011"
+      ],
+      "decision_ids": [
+        "dec_006"
+      ],
+      "document_ids": [
+        "doc_001",
+        "doc_002"
+      ],
+      "history": [
+        {
+          "timestamp": "2026-01-15T00:00:00Z",
+          "field": "scope",
+          "old_value": null,
+          "new_value": "Internal reporting dashboard",
+          "changed_by": "p14",
+          "reason": "Small internal tool",
+          "sources": [
+            "slack_msg_061"
+          ]
+        },
+        {
+          "timestamp": "2026-02-15T00:00:00Z",
+          "field": "scope",
+          "old_value": "Internal reporting dashboard",
+          "new_value": "Customer-facing dashboard for Series B (about 3x scope)",
+          "changed_by": "p1",
+          "reason": "Critical for Series B",
+          "sources": [
+            "slack_msg_063",
+            "slack_msg_064",
+            "slack_msg_065"
+          ]
+        },
+        {
+          "timestamp": "2026-03-05T00:00:00Z",
+          "field": "status",
+          "old_value": "In Progress",
+          "new_value": "Behind schedule",
+          "changed_by": "p14",
+          "reason": "Bigger than initial scope; Alice insists on delivery",
+          "sources": [
+            "slack_msg_067",
+            "slack_msg_068"
+          ]
+        },
+        {
+          "timestamp": "2026-03-25T00:00:00Z",
+          "field": "approach",
+          "old_value": "Build in-house",
+          "new_value": "Buy vendor SaaS",
+          "changed_by": "p1",
+          "reason": "Same cost, 2 months faster, half the work",
+          "sources": [
+            "dec_006",
+            "slack_msg_069",
+            "slack_msg_071",
+            "slack_msg_072"
+          ]
+        },
+        {
+          "timestamp": "2026-04-01T00:00:00Z",
+          "field": "status",
+          "old_value": "In Progress",
+          "new_value": "Closed",
+          "changed_by": "p1",
+          "reason": "Converted from project to ticket",
+          "sources": [
+            "dec_006",
+            "slack_msg_073",
+            "slack_msg_074",
+            "slack_msg_082",
+            "slack_msg_083"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_004",
+      "name": "Infrastructure Migration",
+      "department": "Infrastructure",
+      "owner_id": "p17",
+      "sponsor_id": "p2",
+      "status": "Blocked",
+      "priority": "High",
+      "scope": "Infrastructure migration; blocked until Platform Redesign completes",
+      "budget_usd": null,
+      "target_end": "2026-04-30",
+      "ticket_ids": [
+        "ticket_004"
+      ],
+      "decision_ids": [],
+      "document_ids": [],
+      "history": [
+        {
+          "timestamp": "2026-02-28T00:00:00Z",
+          "field": "target_end",
+          "old_value": null,
+          "new_value": "2026-02-28",
+          "changed_by": "p2",
+          "reason": "Original timeline",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-20T00:00:00Z",
+          "field": "target_end",
+          "old_value": "2026-02-28",
+          "new_value": "2026-03-31",
+          "changed_by": "p17",
+          "reason": "First delay: waiting on Platform",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-25T00:00:00Z",
+          "field": "target_end",
+          "old_value": "2026-03-31",
+          "new_value": "2026-04-30",
+          "changed_by": "p17",
+          "reason": "Second delay: Platform 8 month plan",
+          "sources": [
+            "slack_msg_030"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_005",
+      "name": "Security Audit",
+      "department": "Engineering",
+      "owner_id": "p6",
+      "sponsor_id": "p1",
+      "status": "Not Started",
+      "priority": "High",
+      "scope": "Full security audit (regulatory requirement)",
+      "budget_usd": 150000,
+      "target_end": "2026-06-30",
+      "ticket_ids": [
+        "ticket_005",
+        "ticket_012"
+      ],
+      "decision_ids": [
+        "dec_007"
+      ],
+      "document_ids": [
+        "doc_006"
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-01T00:00:00Z",
+          "field": "priority",
+          "old_value": null,
+          "new_value": "Low",
+          "changed_by": "p2",
+          "reason": "Initial priority",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-01T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 50000,
+          "changed_by": "p2",
+          "reason": "Initial budget",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-05T00:00:00Z",
+          "field": "priority",
+          "old_value": "Low",
+          "new_value": "High",
+          "changed_by": "p1",
+          "reason": "Regulatory requirement discovered",
+          "sources": [
+            "dec_007",
+            "doc_006",
+            "slack_msg_010"
+          ]
+        },
+        {
+          "timestamp": "2026-03-05T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": 50000,
+          "new_value": 150000,
+          "changed_by": "p1",
+          "reason": "Full audit needed",
+          "sources": [
+            "dec_007",
+            "doc_006"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_006",
+      "name": "API v3 Launch",
+      "department": "Engineering",
+      "owner_id": "p7",
+      "sponsor_id": "p2",
+      "status": "In Progress",
+      "priority": "High",
+      "scope": "Reduced-scope API v3",
+      "budget_usd": 100000,
+      "target_end": "2026-08-31",
+      "ticket_ids": [
+        "ticket_006"
+      ],
+      "decision_ids": [],
+      "document_ids": [
+        "doc_003"
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-01T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 200000,
+          "changed_by": "p1",
+          "reason": "Budget approved",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-12T00:00:00Z",
+          "field": "budget_usd",
+          "old_value": 200000,
+          "new_value": 100000,
+          "changed_by": "p3",
+          "reason": "Company-wide cost cutting",
+          "sources": [
+            "slack_msg_080",
+            "slack_msg_018",
+            "doc_003"
+          ]
+        },
+        {
+          "timestamp": "2026-03-13T00:00:00Z",
+          "field": "scope",
+          "old_value": "Full API v3 with webhooks",
+          "new_value": "Core endpoints only",
+          "changed_by": "p7",
+          "reason": "Scope reduced to fit budget",
+          "sources": [
+            "slack_msg_018"
+          ]
+        },
+        {
+          "timestamp": "2026-03-13T00:00:00Z",
+          "field": "target_end",
+          "old_value": "2026-05-31",
+          "new_value": "2026-08-31",
+          "changed_by": "p7",
+          "reason": "Timeline extended",
+          "sources": [
+            "slack_msg_018"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_007",
+      "name": "Tech Debt Cleanup",
+      "department": "Engineering",
+      "owner_id": "p9",
+      "sponsor_id": "p5",
+      "status": "Blocked",
+      "priority": "Low",
+      "scope": "Systematic tech debt cleanup; repeatedly deprioritized",
+      "budget_usd": null,
+      "target_end": null,
+      "ticket_ids": [
+        "ticket_007"
+      ],
+      "decision_ids": [],
+      "document_ids": [],
+      "history": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "field": "schedule",
+          "old_value": null,
+          "new_value": "Q1 2026",
+          "changed_by": "p5",
+          "reason": "Original schedule",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-17T00:00:00Z",
+          "field": "schedule",
+          "old_value": "Q1 2026",
+          "new_value": "Q2 2026",
+          "changed_by": "p9",
+          "reason": "Deprioritized",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-18T00:00:00Z",
+          "field": "schedule",
+          "old_value": "Q2 2026",
+          "new_value": "Q3 2026",
+          "changed_by": "p5",
+          "reason": "Karen moved to Platform",
+          "sources": [
+            "slack_msg_009",
+            "slack_msg_025"
+          ]
+        },
+        {
+          "timestamp": "2026-05-05T00:00:00Z",
+          "field": "schedule",
+          "old_value": "Q3 2026",
+          "new_value": "Q4 2026",
+          "changed_by": "p9",
+          "reason": "Will revisit next year",
+          "sources": [
+            "slack_msg_031"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj_008",
+      "name": "Internal Tools Overhaul",
+      "department": "Product",
+      "owner_id": "p13",
+      "sponsor_id": "p1",
+      "status": "Approved",
+      "priority": "Medium",
+      "scope": "Improve team productivity",
+      "budget_usd": 80000,
+      "target_end": "2026-06-30",
+      "ticket_ids": [
+        "ticket_008"
+      ],
+      "decision_ids": [
+        "dec_008"
+      ],
+      "document_ids": [],
+      "history": [
+        {
+          "timestamp": "2026-03-20T00:00:00Z",
+          "field": "status",
+          "old_value": null,
+          "new_value": "Approved",
+          "changed_by": "p1",
+          "reason": "Emergency greenlight during budget cuts",
+          "sources": [
+            "dec_008",
+            "slack_msg_029"
+          ]
+        }
+      ]
+    }
+  ],
+  "slack_messages": [
+    {
+      "id": "slack_msg_001",
+      "channel": "engineering",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-01T09:00:00Z",
+      "text": "Platform Redesign approved for $500K, starting immediately",
+      "thread_ts": null,
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_002",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-02T09:20:00Z",
+      "text": "Great! I'm allocating 4 engineers to this",
+      "thread_ts": "2026-03-01T09:00:00Z",
+      "reactions": [
+        "rocket"
+      ],
+      "mentioned": [
+        "Charlie Park"
+      ]
+    },
+    {
+      "id": "slack_msg_003",
+      "channel": "engineering",
+      "username": "Charlie Park",
+      "user_id": "p5",
+      "timestamp": "2026-03-02T10:05:00Z",
+      "text": "Which four? Everyone on the Platform team is also tagged on API v3 or tech debt work right now.",
+      "thread_ts": "2026-03-01T09:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_004",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-02T10:30:00Z",
+      "text": "Ian, Jack, Diana and Karen. We'll sort out the overlap as we go.",
+      "thread_ts": "2026-03-01T09:00:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Charlie Park"
+      ]
+    },
+    {
+      "id": "slack_msg_005",
+      "channel": "engineering",
+      "username": "Jack Liu",
+      "user_id": "p7",
+      "timestamp": "2026-03-03T14:00:00Z",
+      "text": "Heads up, API v3 is mid-flight. I can split time but I can't go full-time on Platform.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_006",
+      "channel": "engineering",
+      "username": "Diana Chen",
+      "user_id": "p8",
+      "timestamp": "2026-03-04T11:15:00Z",
+      "text": "Happy to dig into Phase 1 this week. Is the 6 month timeline in Bob's spec still the plan?",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_007",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-04T11:40:00Z",
+      "text": "Yes. Spec v1 is the source of truth: new DB, new API, 6 months.",
+      "thread_ts": "2026-03-04T11:15:00Z",
+      "reactions": [
+        "white_check_mark"
+      ],
+      "mentioned": [
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_008",
+      "channel": "engineering",
+      "username": "Charlie Park",
+      "user_id": "p5",
+      "timestamp": "2026-03-05T09:45:00Z",
+      "text": "Actually, can we start with 2? We have other priorities",
+      "thread_ts": null,
+      "reactions": [
+        "eyes"
+      ],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_009",
+      "channel": "engineering",
+      "username": "Karen Martinez",
+      "user_id": "p9",
+      "timestamp": "2026-03-05T10:20:00Z",
+      "text": "+1 to starting smaller. Tech Debt Cleanup keeps slipping as it is.",
+      "thread_ts": "2026-03-05T09:45:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_010",
+      "channel": "engineering",
+      "username": "Ian Kumar",
+      "user_id": "p6",
+      "timestamp": "2026-03-05T15:00:00Z",
+      "text": "Regulatory requirement just surfaced. Security Audit needs to be complete by Q2. Requirements doc is posted, and I'll be pulled off Platform for the scoping.",
+      "thread_ts": null,
+      "reactions": [
+        "warning"
+      ],
+      "mentioned": [
+        "Alice Chen",
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_011",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-10T10:00:00Z",
+      "text": "Disagree. We need 4 to hit the timeline",
+      "thread_ts": "2026-03-05T09:45:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Charlie Park"
+      ]
+    },
+    {
+      "id": "slack_msg_012",
+      "channel": "engineering",
+      "username": "Charlie Park",
+      "user_id": "p5",
+      "timestamp": "2026-03-10T10:30:00Z",
+      "text": "Then who covers the Infrastructure Migration dependencies? Harry is already waiting on us.",
+      "thread_ts": "2026-03-05T09:45:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Harry Jenkins",
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_013",
+      "channel": "engineering",
+      "username": "Harry Jenkins",
+      "user_id": "p17",
+      "timestamp": "2026-03-11T09:15:00Z",
+      "text": "Confirming PROJ-004 is blocked until Platform delivers. We're sitting idle.",
+      "thread_ts": null,
+      "reactions": [
+        "sweat_smile"
+      ],
+      "mentioned": [
+        "Charlie Park"
+      ]
+    },
+    {
+      "id": "slack_msg_014",
+      "channel": "engineering",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-12T14:30:00Z",
+      "text": "Finance just called, budget cut to $250K due to Q1 numbers",
+      "thread_ts": null,
+      "reactions": [
+        "thinking_face",
+        "worried"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_015",
+      "channel": "engineering",
+      "username": "Karen Martinez",
+      "user_id": "p9",
+      "timestamp": "2026-03-12T14:45:00Z",
+      "text": "Is that final or just a proposal?",
+      "thread_ts": "2026-03-12T14:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_016",
+      "channel": "engineering",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-12T15:00:00Z",
+      "text": "Final. Carol signed off today.",
+      "thread_ts": "2026-03-12T14:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Karen Martinez",
+        "Carol White"
+      ]
+    },
+    {
+      "id": "slack_msg_017",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-13T08:50:00Z",
+      "text": "That's impossible. We can't do it with 2 engineers AND half budget",
+      "thread_ts": null,
+      "reactions": [
+        "grimacing"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_018",
+      "channel": "engineering",
+      "username": "Jack Liu",
+      "user_id": "p7",
+      "timestamp": "2026-03-13T09:30:00Z",
+      "text": "Agree with Bob. A full rewrite on half the money isn't realistic. FYI API v3 also just got cut from $200K to $100K, so I'm trimming scope and extending that timeline.",
+      "thread_ts": "2026-03-13T08:50:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_019",
+      "channel": "engineering",
+      "username": "Diana Chen",
+      "user_id": "p8",
+      "timestamp": "2026-03-13T11:00:00Z",
+      "text": "What if we keep the existing DB and only touch what hurts most: query performance, caching, API latency?",
+      "thread_ts": "2026-03-13T08:50:00Z",
+      "reactions": [
+        "bulb"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_020",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-14T10:20:00Z",
+      "text": "That's not the redesign I specced. But I'd rather ship something than nothing. Let me think.",
+      "thread_ts": "2026-03-13T08:50:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_021",
+      "channel": "engineering",
+      "username": "Charlie Park",
+      "user_id": "p5",
+      "timestamp": "2026-03-15T09:00:00Z",
+      "text": "OK, let's descope. Focus on performance only, not architecture",
+      "thread_ts": null,
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Bob Smith",
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_022",
+      "channel": "engineering",
+      "username": "Charlie Park",
+      "user_id": "p5",
+      "timestamp": "2026-03-15T09:30:00Z",
+      "text": "Housekeeping: moving PROJ-001 to Diana for now and splitting the performance work into PROJ-009. Bob stays on as exec sponsor.",
+      "thread_ts": "2026-03-15T09:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Diana Chen",
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_023",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-16T13:10:00Z",
+      "text": "Fine. Sponsor only. Diana, you own the plan.",
+      "thread_ts": "2026-03-15T09:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_024",
+      "channel": "engineering",
+      "username": "Ian Kumar",
+      "user_id": "p6",
+      "timestamp": "2026-03-17T10:00:00Z",
+      "text": "I need about 2 weeks on the audit scoping. Platform can have Jack, Diana and Karen meanwhile.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Charlie Park"
+      ]
+    },
+    {
+      "id": "slack_msg_025",
+      "channel": "engineering",
+      "username": "Diana Chen",
+      "user_id": "p8",
+      "timestamp": "2026-03-18T10:30:00Z",
+      "text": "I volunteer to lead. Let's make it work with $250K and 3 engineers",
+      "thread_ts": null,
+      "reactions": [
+        "raised_hands"
+      ],
+      "mentioned": [
+        "Alice Chen",
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_026",
+      "channel": "engineering",
+      "username": "Jack Liu",
+      "user_id": "p7",
+      "timestamp": "2026-03-19T15:00:00Z",
+      "text": "Draft of the v2 spec is in the doc. Keeps the existing DB, extends the API.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_027",
+      "channel": "engineering",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-20T09:00:00Z",
+      "text": "Diana, great. Confirmed. New timeline: 8 months instead of 6",
+      "thread_ts": null,
+      "reactions": [
+        "tada"
+      ],
+      "mentioned": [
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_028",
+      "channel": "engineering",
+      "username": "Diana Chen",
+      "user_id": "p8",
+      "timestamp": "2026-03-20T09:20:00Z",
+      "text": "Thanks Alice. Tech Spec v2 is published and PROJ-009 tracks the work.",
+      "thread_ts": "2026-03-20T09:00:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_029",
+      "channel": "engineering",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-20T11:30:00Z",
+      "text": "Separate news: Internal Tools Overhaul is greenlit at $80K with Leo leading. The goal is to speed up the Platform work.",
+      "thread_ts": null,
+      "reactions": [
+        "eyes"
+      ],
+      "mentioned": [
+        "Leo Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_030",
+      "channel": "engineering",
+      "username": "Harry Jenkins",
+      "user_id": "p17",
+      "timestamp": "2026-03-25T17:00:00Z",
+      "text": "With Platform on an 8 month plan, PROJ-004 slips again. Pushing to April 30 and flagging it at risk. Still blocked on Platform.",
+      "thread_ts": null,
+      "reactions": [
+        "worried"
+      ],
+      "mentioned": [
+        "Charlie Park",
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_031",
+      "channel": "engineering",
+      "username": "Karen Martinez",
+      "user_id": "p9",
+      "timestamp": "2026-04-02T10:00:00Z",
+      "text": "Mobile is cancelled, Analytics is going to a vendor. Does that make Platform the only big bet now?",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Diana Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_032",
+      "channel": "engineering",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-05T11:30:00Z",
+      "text": "Platform Redesign budget restored, $400K. Series B depends on it.",
+      "thread_ts": null,
+      "reactions": [
+        "tada"
+      ],
+      "mentioned": [
+        "Diana Chen",
+        "Bob Smith",
+        "Charlie Park"
+      ]
+    },
+    {
+      "id": "slack_msg_033",
+      "channel": "engineering",
+      "username": "Diana Chen",
+      "user_id": "p8",
+      "timestamp": "2026-04-05T11:45:00Z",
+      "text": "Great news. Can we bring back a 4th engineer?",
+      "thread_ts": "2026-04-05T11:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_034",
+      "channel": "engineering",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-04-06T09:30:00Z",
+      "text": "Yes, Ian rejoins once audit scoping wraps. Keep the performance-first scope though; we revisit the DB in Phase 2.",
+      "thread_ts": "2026-04-05T11:30:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Diana Chen",
+        "Ian Kumar"
+      ]
+    },
+    {
+      "id": "slack_msg_035",
+      "channel": "engineering",
+      "username": "Diana Chen",
+      "user_id": "p8",
+      "timestamp": "2026-05-12T10:00:00Z",
+      "text": "Progress: p95 API latency is down 31% after the caching work. Phase 1 is on track for the end of May investor demo.",
+      "thread_ts": null,
+      "reactions": [
+        "rocket"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_036",
+      "channel": "product",
+      "username": "Eve Williams",
+      "user_id": "p11",
+      "timestamp": "2026-02-20T10:00:00Z",
+      "text": "Mobile App v2 greenlit for Q2 launch",
+      "thread_ts": null,
+      "reactions": [
+        "rocket"
+      ],
+      "mentioned": [
+        "Alice Chen",
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_037",
+      "channel": "product",
+      "username": "Nina Rossi",
+      "user_id": "p12",
+      "timestamp": "2026-02-20T10:30:00Z",
+      "text": "Great. Design kickoff Monday. I need to audit the component library first.",
+      "thread_ts": "2026-02-20T10:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Eve Williams"
+      ]
+    },
+    {
+      "id": "slack_msg_038",
+      "channel": "product",
+      "username": "Leo Chen",
+      "user_id": "p13",
+      "timestamp": "2026-02-22T14:00:00Z",
+      "text": "Do we have the refreshed brand assets yet? Design depends on them.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_039",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-02-25T09:30:00Z",
+      "text": "Marketing committed, got the budget",
+      "thread_ts": null,
+      "reactions": [
+        "moneybag"
+      ],
+      "mentioned": [
+        "Eve Williams",
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_040",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-02-26T11:00:00Z",
+      "text": "Campaign kicks off in May and we're already telling partners Q2.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_041",
+      "channel": "product",
+      "username": "Nina Rossi",
+      "user_id": "p12",
+      "timestamp": "2026-03-02T15:20:00Z",
+      "text": "Early flows are more complex than scoped: offline mode, biometric auth, tablet layouts.",
+      "thread_ts": null,
+      "reactions": [
+        "eyes"
+      ],
+      "mentioned": [
+        "Eve Williams"
+      ]
+    },
+    {
+      "id": "slack_msg_042",
+      "channel": "product",
+      "username": "Eve Williams",
+      "user_id": "p11",
+      "timestamp": "2026-03-04T10:10:00Z",
+      "text": "Noted. I'll raise it with Alice.",
+      "thread_ts": "2026-03-02T15:20:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Nina Rossi"
+      ]
+    },
+    {
+      "id": "slack_msg_043",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-03-06T13:30:00Z",
+      "text": "Please don't let design slip. Partner briefings are already booked.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Eve Williams"
+      ]
+    },
+    {
+      "id": "slack_msg_044",
+      "channel": "product",
+      "username": "Eve Williams",
+      "user_id": "p11",
+      "timestamp": "2026-03-10T09:00:00Z",
+      "text": "Actually, design is taking longer. Let's target Q3",
+      "thread_ts": null,
+      "reactions": [
+        "thinking_face"
+      ],
+      "mentioned": [
+        "Alice Chen",
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_045",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-03-10T09:20:00Z",
+      "text": "Q3? Our partner commitments say Q2.",
+      "thread_ts": "2026-03-10T09:00:00Z",
+      "reactions": [
+        "disappointed"
+      ],
+      "mentioned": [
+        "Eve Williams"
+      ]
+    },
+    {
+      "id": "slack_msg_046",
+      "channel": "product",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-12T11:00:00Z",
+      "text": "Agreed. Better to delay than launch broken",
+      "thread_ts": "2026-03-10T09:00:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Eve Williams",
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_047",
+      "channel": "product",
+      "username": "Leo Chen",
+      "user_id": "p13",
+      "timestamp": "2026-03-14T16:00:00Z",
+      "text": "Updated PROJ-002: design complete moves to May 31, launch to Q3.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Eve Williams"
+      ]
+    },
+    {
+      "id": "slack_msg_048",
+      "channel": "product",
+      "username": "Nina Rossi",
+      "user_id": "p12",
+      "timestamp": "2026-03-18T10:00:00Z",
+      "text": "Design is about 40% done. Q3 is realistic if scope holds.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_049",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-03-20T14:00:00Z",
+      "text": "Reconsidering. Market window closing. Can we do Q2?",
+      "thread_ts": null,
+      "reactions": [
+        "pray"
+      ],
+      "mentioned": [
+        "Eve Williams",
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_050",
+      "channel": "product",
+      "username": "Eve Williams",
+      "user_id": "p11",
+      "timestamp": "2026-03-22T09:40:00Z",
+      "text": "No way. Design is complex. Q3 minimum.",
+      "thread_ts": "2026-03-20T14:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_051",
+      "channel": "product",
+      "username": "Nina Rossi",
+      "user_id": "p12",
+      "timestamp": "2026-03-22T10:15:00Z",
+      "text": "Agree with Eve. A rushed launch means rework later.",
+      "thread_ts": "2026-03-20T14:00:00Z",
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_052",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-03-25T11:20:00Z",
+      "text": "A competitor just announced a mobile app. We're losing the window.",
+      "thread_ts": null,
+      "reactions": [
+        "rotating_light"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_053",
+      "channel": "product",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-28T10:00:00Z",
+      "text": "I hear you, Frank. Let me weigh it against Platform.",
+      "thread_ts": "2026-03-25T11:20:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_054",
+      "channel": "product",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-01T09:30:00Z",
+      "text": "Cancelling Mobile App v2. Focusing on Platform instead",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Eve Williams",
+        "Frank Thompson",
+        "Nina Rossi"
+      ]
+    },
+    {
+      "id": "slack_msg_055",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-04-02T09:00:00Z",
+      "text": "WHAT? We promised this to the market!",
+      "thread_ts": "2026-04-01T09:30:00Z",
+      "reactions": [
+        "angry"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_056",
+      "channel": "product",
+      "username": "Eve Williams",
+      "user_id": "p11",
+      "timestamp": "2026-04-02T09:25:00Z",
+      "text": "I've set PROJ-002 to cancelled. What do we tell the design team?",
+      "thread_ts": "2026-04-01T09:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_057",
+      "channel": "product",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-05T10:00:00Z",
+      "text": "I know, but Platform is more strategic",
+      "thread_ts": "2026-04-01T09:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_058",
+      "channel": "product",
+      "username": "Frank Thompson",
+      "user_id": "p10",
+      "timestamp": "2026-04-05T10:30:00Z",
+      "text": "Then someone needs to own the partner conversation. I'm not doing it alone.",
+      "thread_ts": "2026-04-01T09:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_059",
+      "channel": "product",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-08T15:00:00Z",
+      "text": "I'll join the partner calls. Frank, draft the talking points.",
+      "thread_ts": "2026-04-01T09:30:00Z",
+      "reactions": [
+        "handshake"
+      ],
+      "mentioned": [
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_060",
+      "channel": "product",
+      "username": "Nina Rossi",
+      "user_id": "p12",
+      "timestamp": "2026-04-20T11:00:00Z",
+      "text": "Archiving the Mobile v2 Figma files. Reusable components are moving into the design system.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Leo Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_061",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-01-15T09:00:00Z",
+      "text": "Small analytics dashboard for internal use",
+      "thread_ts": null,
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_062",
+      "channel": "analytics",
+      "username": "Priya Nair",
+      "user_id": "p16",
+      "timestamp": "2026-01-20T11:00:00Z",
+      "text": "Started on the revenue and retention views using Omar's warehouse tables.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Omar Hassan"
+      ]
+    },
+    {
+      "id": "slack_msg_063",
+      "channel": "analytics",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-02-01T10:00:00Z",
+      "text": "Can we expand this to customer-facing?",
+      "thread_ts": null,
+      "reactions": [
+        "eyes"
+      ],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_064",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-02-10T14:00:00Z",
+      "text": "Sure, scope would increase 3x",
+      "thread_ts": "2026-02-01T10:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_065",
+      "channel": "analytics",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-02-15T09:15:00Z",
+      "text": "Do it. Critical for Series B",
+      "thread_ts": "2026-02-01T10:00:00Z",
+      "reactions": [
+        "fire"
+      ],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_066",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-02-16T11:30:00Z",
+      "text": "Noted. Customer Portal (PROJ-011) was greenlit too and will need this dashboard's data, so I'll plan both together.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_067",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-03-05T10:00:00Z",
+      "text": "We're way behind. This is bigger than initial scope",
+      "thread_ts": null,
+      "reactions": [
+        "worried"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_068",
+      "channel": "analytics",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-10T10:30:00Z",
+      "text": "Don't care. We committed to Series B partners",
+      "thread_ts": "2026-03-05T10:00:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_069",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-03-20T09:30:00Z",
+      "text": "Found a vendor solution. Could buy instead of build?",
+      "thread_ts": null,
+      "reactions": [
+        "bulb"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_070",
+      "channel": "analytics",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-22T10:00:00Z",
+      "text": "Cost? Timeline?",
+      "thread_ts": "2026-03-20T09:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_071",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-03-25T15:00:00Z",
+      "text": "Same cost, 2 months faster, half the work",
+      "thread_ts": "2026-03-20T09:30:00Z",
+      "reactions": [
+        "tada"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_072",
+      "channel": "analytics",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-25T16:10:00Z",
+      "text": "Interesting. Send me the vendor contract terms and let me think on it.",
+      "thread_ts": "2026-03-20T09:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_073",
+      "channel": "analytics",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-01T10:30:00Z",
+      "text": "Switch to vendor. Analytics Dashboard is now a ticket, not a project",
+      "thread_ts": null,
+      "reactions": [
+        "white_check_mark"
+      ],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_074",
+      "channel": "analytics",
+      "username": "Grace Davis",
+      "user_id": "p14",
+      "timestamp": "2026-04-03T14:00:00Z",
+      "text": "Closing out PROJ-003 as resolved (vendor SaaS). Integration work will be tracked in a new ticket, with Priya and Omar on SSO and data feeds.",
+      "thread_ts": "2026-04-01T10:30:00Z",
+      "reactions": [],
+      "mentioned": [
+        "Priya Nair",
+        "Omar Hassan"
+      ]
+    },
+    {
+      "id": "slack_msg_075",
+      "channel": "analytics",
+      "username": "Omar Hassan",
+      "user_id": "p15",
+      "timestamp": "2026-04-14T11:00:00Z",
+      "text": "Vendor sandbox is up and the first data feed is connected.",
+      "thread_ts": null,
+      "reactions": [
+        "rocket"
+      ],
+      "mentioned": [
+        "Grace Davis"
+      ]
+    },
+    {
+      "id": "slack_msg_076",
+      "channel": "leadership",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-01-01T08:00:00Z",
+      "text": "2026 priorities: Platform Redesign, Mobile v2, Security Audit",
+      "thread_ts": null,
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_077",
+      "channel": "leadership",
+      "username": "Carol White",
+      "user_id": "p3",
+      "timestamp": "2026-03-01T09:00:00Z",
+      "text": "Q1 numbers came in. Cost cutting needed.",
+      "thread_ts": null,
+      "reactions": [
+        "worried"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_078",
+      "channel": "leadership",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-03-05T10:00:00Z",
+      "text": "Cutting budgets. What's non-negotiable?",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Bob Smith",
+        "Carol White",
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_079",
+      "channel": "leadership",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-10T11:00:00Z",
+      "text": "Platform Redesign is critical. Don't cut that.",
+      "thread_ts": null,
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_080",
+      "channel": "leadership",
+      "username": "Carol White",
+      "user_id": "p3",
+      "timestamp": "2026-03-12T13:30:00Z",
+      "text": "Cutting it from $500K to $250K",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "id": "slack_msg_081",
+      "channel": "leadership",
+      "username": "Bob Smith",
+      "user_id": "p2",
+      "timestamp": "2026-03-15T10:00:00Z",
+      "text": "That doesn't work. Let me rebuild the plan",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Carol White"
+      ]
+    },
+    {
+      "id": "slack_msg_082",
+      "channel": "leadership",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-01T08:30:00Z",
+      "text": "New strategy: Focus on Platform, delay Mobile, outsource Analytics",
+      "thread_ts": null,
+      "reactions": [
+        "thumbsup"
+      ],
+      "mentioned": []
+    },
+    {
+      "id": "slack_msg_083",
+      "channel": "leadership",
+      "username": "Alice Chen",
+      "user_id": "p1",
+      "timestamp": "2026-04-02T09:00:00Z",
+      "text": "Correction to the above: Mobile v2 is cancelled, not delayed. Analytics goes to the vendor.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Frank Thompson"
+      ]
+    },
+    {
+      "id": "slack_msg_084",
+      "channel": "leadership",
+      "username": "Carol White",
+      "user_id": "p3",
+      "timestamp": "2026-04-05T14:00:00Z",
+      "text": "Revised budget approved",
+      "thread_ts": null,
+      "reactions": [
+        "white_check_mark"
+      ],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    },
+    {
+      "id": "slack_msg_085",
+      "channel": "leadership",
+      "username": "Carol White",
+      "user_id": "p3",
+      "timestamp": "2026-04-05T14:10:00Z",
+      "text": "Details: Platform $400K, Security Audit $150K, API v3 $100K, Internal Tools $80K. Mobile v2 funds released.",
+      "thread_ts": null,
+      "reactions": [],
+      "mentioned": [
+        "Alice Chen"
+      ]
+    }
+  ],
+  "tickets": [
+    {
+      "id": "ticket_001",
+      "key": "PROJ-001",
+      "title": "Platform Redesign - Phase 1",
+      "project_id": "proj_001",
+      "status": "In Progress",
+      "priority": "High",
+      "assignee_id": "p8",
+      "reporter_id": "p2",
+      "created": "2026-02-01",
+      "resolved": null,
+      "due_date": "2026-11-20",
+      "budget_usd": 400000,
+      "description": "Performance optimization only",
+      "description_versions": [
+        {
+          "version": 1,
+          "date": "2026-02-01",
+          "text": "Complete backend refactor",
+          "author_id": "p2",
+          "sources": [
+            "doc_004"
+          ]
+        },
+        {
+          "version": 2,
+          "date": "2026-03-15",
+          "text": "Performance optimization only",
+          "author_id": "p5",
+          "sources": [
+            "slack_msg_021",
+            "slack_msg_019",
+            "doc_005"
+          ]
+        }
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "assignee",
+          "old_value": null,
+          "new_value": "p2",
+          "changed_by": "p1",
+          "reason": "Initial assignment after approval of DEC-001",
+          "sources": [
+            "dec_001",
+            "doc_004"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "priority",
+          "old_value": null,
+          "new_value": "High",
+          "changed_by": "p1",
+          "reason": "Initial priority",
+          "sources": [
+            "dec_001"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 500000,
+          "changed_by": "p1",
+          "reason": "Approved budget",
+          "sources": [
+            "dec_001",
+            "doc_001"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-08-01",
+          "changed_by": "p1",
+          "reason": "6 month timeline from Tech Spec v1",
+          "sources": [
+            "doc_004"
+          ]
+        },
+        {
+          "timestamp": "2026-03-10T16:00:00Z",
+          "field": "priority",
+          "old_value": "High",
+          "new_value": "Medium",
+          "changed_by": "p5",
+          "reason": "Provisional deprioritization while Q1 numbers were reviewed and budgets cut (same day Bob argued for 4 engineers and called the project critical)",
+          "sources": [
+            "slack_msg_008",
+            "slack_msg_011",
+            "slack_msg_077",
+            "slack_msg_078",
+            "slack_msg_079"
+          ]
+        },
+        {
+          "timestamp": "2026-03-12T15:00:00Z",
+          "field": "budget_usd",
+          "old_value": 500000,
+          "new_value": 250000,
+          "changed_by": "p3",
+          "reason": "Q1 revenue shortfall",
+          "sources": [
+            "dec_002",
+            "slack_msg_080",
+            "slack_msg_014"
+          ]
+        },
+        {
+          "timestamp": "2026-03-15T09:30:00Z",
+          "field": "assignee",
+          "old_value": "p2",
+          "new_value": "p8",
+          "changed_by": "p5",
+          "reason": "Reassigned to Diana; Bob stays exec sponsor",
+          "sources": [
+            "slack_msg_022",
+            "slack_msg_021"
+          ]
+        },
+        {
+          "timestamp": "2026-03-15T09:30:00Z",
+          "field": "description",
+          "old_value": "Complete backend refactor",
+          "new_value": "Performance optimization only",
+          "changed_by": "p5",
+          "reason": "Descope to performance only",
+          "sources": [
+            "slack_msg_021",
+            "slack_msg_019"
+          ]
+        },
+        {
+          "timestamp": "2026-03-20T09:00:00Z",
+          "field": "due_date",
+          "old_value": "2026-08-01",
+          "new_value": "2026-11-20",
+          "changed_by": "p1",
+          "reason": "Timeline extended from 6 to 8 months",
+          "sources": [
+            "slack_msg_027",
+            "doc_005"
+          ]
+        },
+        {
+          "timestamp": "2026-04-05T11:30:00Z",
+          "field": "priority",
+          "old_value": "Medium",
+          "new_value": "High",
+          "changed_by": "p1",
+          "reason": "Restored due to Series B dependency",
+          "sources": [
+            "dec_003",
+            "slack_msg_032"
+          ]
+        },
+        {
+          "timestamp": "2026-04-05T11:30:00Z",
+          "field": "budget_usd",
+          "old_value": 250000,
+          "new_value": 400000,
+          "changed_by": "p1",
+          "reason": "Compromise budget restoration overriding DEC-002",
+          "sources": [
+            "dec_003",
+            "slack_msg_032",
+            "slack_msg_084",
+            "slack_msg_085"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p2",
+          "timestamp": "2026-02-01T09:05:00Z",
+          "text": "Kicking off Phase 1. Full backend refactor per Tech Spec v1."
+        },
+        {
+          "author_id": "p5",
+          "timestamp": "2026-03-15T09:35:00Z",
+          "text": "Performance-only work split into PROJ-009. Diana owns it."
+        },
+        {
+          "author_id": "p8",
+          "timestamp": "2026-05-12T10:05:00Z",
+          "text": "Phase 1 perf milestones on track."
+        }
+      ],
+      "links": {
+        "blocks": [
+          "ticket_004",
+          "ticket_002"
+        ],
+        "split_into": [
+          "ticket_009"
+        ],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_002",
+      "key": "PROJ-002",
+      "title": "Mobile App v2 - Design",
+      "project_id": "proj_002",
+      "status": "Cancelled",
+      "priority": "High",
+      "assignee_id": "p11",
+      "reporter_id": "p10",
+      "created": "2026-02-01",
+      "resolved": "2026-04-01",
+      "due_date": null,
+      "launch_target": null,
+      "description": "Design for Mobile App v2 (offline mode, biometric auth, tablet layouts).",
+      "description_versions": [
+        {
+          "version": 1,
+          "date": "2026-02-01",
+          "text": "Design for Mobile App v2 ahead of a Q2 launch.",
+          "author_id": "p11",
+          "sources": []
+        }
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "assignee",
+          "old_value": null,
+          "new_value": "p11",
+          "changed_by": "p10",
+          "reason": "Initial assignment",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-03-31",
+          "changed_by": "p11",
+          "reason": "Original timeline for Q2 launch",
+          "sources": [
+            "slack_msg_036"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "launch_target",
+          "old_value": null,
+          "new_value": "Q2 2026",
+          "changed_by": "p11",
+          "reason": "Original launch target",
+          "sources": [
+            "slack_msg_036"
+          ]
+        },
+        {
+          "timestamp": "2026-03-10T09:00:00Z",
+          "field": "due_date",
+          "old_value": "2026-03-31",
+          "new_value": "2026-05-31",
+          "changed_by": "p11",
+          "reason": "Design complexity; proposed delay (ticket edit logged 3/14)",
+          "sources": [
+            "dec_004",
+            "slack_msg_044",
+            "slack_msg_046",
+            "slack_msg_047"
+          ]
+        },
+        {
+          "timestamp": "2026-03-10T09:00:00Z",
+          "field": "launch_target",
+          "old_value": "Q2 2026",
+          "new_value": "Q3 2026",
+          "changed_by": "p11",
+          "reason": "Design complexity",
+          "sources": [
+            "dec_004",
+            "slack_msg_044",
+            "slack_msg_046"
+          ]
+        },
+        {
+          "timestamp": "2026-04-01T17:00:00Z",
+          "field": "status",
+          "old_value": "In Progress",
+          "new_value": "Cancelled",
+          "changed_by": "p11",
+          "reason": "Alice cancelled Mobile App v2 to focus on Platform",
+          "sources": [
+            "dec_005",
+            "slack_msg_054",
+            "slack_msg_056",
+            "slack_msg_082",
+            "slack_msg_083"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p12",
+          "timestamp": "2026-03-02T15:30:00Z",
+          "text": "Flows more complex than scoped."
+        },
+        {
+          "author_id": "p11",
+          "timestamp": "2026-04-02T09:30:00Z",
+          "text": "Cancelled per Alice. Archiving design work."
+        }
+      ],
+      "blockers": [
+        "Design complexity",
+        "Platform priorities"
+      ],
+      "links": {
+        "blocked_by": [
+          "ticket_001"
+        ],
+        "blocks": []
+      }
+    },
+    {
+      "id": "ticket_003",
+      "key": "PROJ-003",
+      "title": "Analytics Dashboard MVP",
+      "project_id": "proj_003",
+      "status": "Closed",
+      "priority": "Critical",
+      "assignee_id": "p14",
+      "reporter_id": "p14",
+      "created": "2026-01-15",
+      "resolved": "2026-04-01",
+      "due_date": null,
+      "resolution": "Switched to vendor product (SaaS)",
+      "description": "Customer-facing dashboard for Series B",
+      "description_versions": [
+        {
+          "version": 1,
+          "date": "2026-01-15",
+          "text": "Internal reporting tool",
+          "author_id": "p14",
+          "sources": [
+            "slack_msg_061"
+          ]
+        },
+        {
+          "version": 2,
+          "date": "2026-02-15",
+          "text": "Customer-facing dashboard for Series B",
+          "author_id": "p14",
+          "sources": [
+            "slack_msg_063",
+            "slack_msg_064",
+            "slack_msg_065"
+          ]
+        }
+      ],
+      "history": [
+        {
+          "timestamp": "2026-01-15T09:00:00Z",
+          "field": "priority",
+          "old_value": null,
+          "new_value": "Medium",
+          "changed_by": "p14",
+          "reason": "Small internal tool",
+          "sources": [
+            "slack_msg_061"
+          ]
+        },
+        {
+          "timestamp": "2026-02-15T09:15:00Z",
+          "field": "description",
+          "old_value": "Internal reporting tool",
+          "new_value": "Customer-facing dashboard for Series B",
+          "changed_by": "p14",
+          "reason": "Scope expanded about 3x at Alice's request",
+          "sources": [
+            "slack_msg_063",
+            "slack_msg_064",
+            "slack_msg_065"
+          ]
+        },
+        {
+          "timestamp": "2026-02-15T09:15:00Z",
+          "field": "priority",
+          "old_value": "Medium",
+          "new_value": "Critical",
+          "changed_by": "p1",
+          "reason": "Critical for Series B",
+          "sources": [
+            "slack_msg_065"
+          ]
+        },
+        {
+          "timestamp": "2026-04-01T10:45:00Z",
+          "field": "status",
+          "old_value": "In Progress",
+          "new_value": "Closed",
+          "changed_by": "p14",
+          "reason": "Switched to vendor SaaS (build vs buy); converted from project to ticket",
+          "sources": [
+            "dec_006",
+            "slack_msg_073",
+            "slack_msg_074"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p14",
+          "timestamp": "2026-03-05T10:05:00Z",
+          "text": "Way behind. Bigger than initial scope."
+        },
+        {
+          "author_id": "p14",
+          "timestamp": "2026-04-03T14:05:00Z",
+          "text": "Closed as resolved: vendor SaaS. Integration ticket to follow."
+        }
+      ],
+      "links": {
+        "blocks": [
+          "ticket_010",
+          "ticket_011"
+        ],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_004",
+      "key": "PROJ-004",
+      "title": "Infrastructure Migration",
+      "project_id": "proj_004",
+      "status": "Blocked",
+      "priority": "High",
+      "assignee_id": "p17",
+      "reporter_id": "p2",
+      "created": "2026-01-01",
+      "resolved": null,
+      "due_date": "2026-04-30",
+      "description": "Migrate production infrastructure. Blocked until Platform Redesign completes.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-01-01T09:00:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-02-28",
+          "changed_by": "p2",
+          "reason": "Original timeline",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-20T11:00:00Z",
+          "field": "status",
+          "old_value": "In Progress",
+          "new_value": "Blocked",
+          "changed_by": "p17",
+          "reason": "Waiting on Platform",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-20T11:00:00Z",
+          "field": "due_date",
+          "old_value": "2026-02-28",
+          "new_value": "2026-03-31",
+          "changed_by": "p17",
+          "reason": "First delay: waiting on Platform API contracts",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-25T17:00:00Z",
+          "field": "due_date",
+          "old_value": "2026-03-31",
+          "new_value": "2026-04-30",
+          "changed_by": "p17",
+          "reason": "Second delay: Platform moved to an 8 month plan",
+          "sources": [
+            "slack_msg_030"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p17",
+          "timestamp": "2026-02-20T11:05:00Z",
+          "text": "Delaying to Mar 31. Waiting on Platform API contracts."
+        },
+        {
+          "author_id": "p17",
+          "timestamp": "2026-03-11T09:20:00Z",
+          "text": "Waiting for Platform team. They're understaffed."
+        },
+        {
+          "author_id": "p17",
+          "timestamp": "2026-03-25T17:05:00Z",
+          "text": "Moved to Apr 30. Still blocked on Platform."
+        }
+      ],
+      "blocker": "Platform Redesign must complete first",
+      "links": {
+        "blocked_by": [
+          "ticket_001",
+          "ticket_009"
+        ],
+        "blocks": []
+      }
+    },
+    {
+      "id": "ticket_005",
+      "key": "PROJ-005",
+      "title": "Security Audit",
+      "project_id": "proj_005",
+      "status": "Not Started",
+      "priority": "High",
+      "assignee_id": "p6",
+      "reporter_id": "p2",
+      "created": "2026-02-01",
+      "resolved": null,
+      "due_date": "2026-06-30",
+      "budget_usd": 150000,
+      "description": "Full security audit required by Q2 due to a regulatory requirement.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "priority",
+          "old_value": null,
+          "new_value": "Low",
+          "changed_by": "p2",
+          "reason": "Initial priority",
+          "sources": [
+            "slack_msg_076"
+          ]
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 50000,
+          "changed_by": "p2",
+          "reason": "Initial budget",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-05T11:00:00Z",
+          "field": "priority",
+          "old_value": "Low",
+          "new_value": "High",
+          "changed_by": "p1",
+          "reason": "Regulatory requirement discovered",
+          "sources": [
+            "dec_007",
+            "doc_006",
+            "slack_msg_010"
+          ]
+        },
+        {
+          "timestamp": "2026-03-05T11:00:00Z",
+          "field": "budget_usd",
+          "old_value": 50000,
+          "new_value": 150000,
+          "changed_by": "p1",
+          "reason": "Budget increased for full audit",
+          "sources": [
+            "dec_007",
+            "doc_006"
+          ]
+        },
+        {
+          "timestamp": "2026-03-05T11:00:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-06-30",
+          "changed_by": "p1",
+          "reason": "Full audit by Q2 (lands after the June 1 Series B target)",
+          "sources": [
+            "doc_006"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p6",
+          "timestamp": "2026-03-05T15:10:00Z",
+          "text": "Scoping vendor options. Requirements doc posted."
+        }
+      ],
+      "links": {
+        "blocks": [
+          "ticket_010"
+        ],
+        "related_to": [
+          "ticket_012"
+        ],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_006",
+      "key": "PROJ-006",
+      "title": "API v3 Launch",
+      "project_id": "proj_006",
+      "status": "In Progress",
+      "priority": "High",
+      "assignee_id": "p7",
+      "reporter_id": "p2",
+      "created": "2026-01-15",
+      "resolved": null,
+      "due_date": "2026-08-31",
+      "budget_usd": 100000,
+      "description": "Reduced-scope API v3: core endpoints only; webhooks deferred.",
+      "description_versions": [
+        {
+          "version": 1,
+          "date": "2026-01-15",
+          "text": "API v3 launch with full endpoint parity and webhooks.",
+          "author_id": "p7",
+          "sources": []
+        },
+        {
+          "version": 2,
+          "date": "2026-03-13",
+          "text": "Reduced-scope API v3: core endpoints only; webhooks deferred.",
+          "author_id": "p7",
+          "sources": [
+            "slack_msg_018"
+          ]
+        }
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 200000,
+          "changed_by": "p1",
+          "reason": "Budget approved",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-05-31",
+          "changed_by": "p7",
+          "reason": "Original target",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-12T15:00:00Z",
+          "field": "budget_usd",
+          "old_value": 200000,
+          "new_value": 100000,
+          "changed_by": "p3",
+          "reason": "Part of company-wide cost cutting after Q1 numbers",
+          "sources": [
+            "slack_msg_080",
+            "slack_msg_018",
+            "doc_003"
+          ]
+        },
+        {
+          "timestamp": "2026-03-13T09:30:00Z",
+          "field": "description",
+          "old_value": "Full API v3 with webhooks",
+          "new_value": "Reduced-scope API v3",
+          "changed_by": "p7",
+          "reason": "Scope reduced to fit the $100K budget",
+          "sources": [
+            "slack_msg_018"
+          ]
+        },
+        {
+          "timestamp": "2026-03-13T09:30:00Z",
+          "field": "due_date",
+          "old_value": "2026-05-31",
+          "new_value": "2026-08-31",
+          "changed_by": "p7",
+          "reason": "Timeline extended after scope and budget cut",
+          "sources": [
+            "slack_msg_018"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p7",
+          "timestamp": "2026-03-13T09:35:00Z",
+          "text": "Cut from $200K to $100K. Trimming scope, moving the launch out."
+        }
+      ],
+      "links": {
+        "blocks": [],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_007",
+      "key": "PROJ-007",
+      "title": "Tech Debt Cleanup",
+      "project_id": "proj_007",
+      "status": "Blocked",
+      "priority": "Low",
+      "assignee_id": "p9",
+      "reporter_id": "p5",
+      "created": "2026-01-01",
+      "resolved": null,
+      "due_date": null,
+      "schedule": "Q4 2026",
+      "description": "Systematic tech debt cleanup. Repeatedly deprioritized behind Platform work.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-01-01T09:00:00Z",
+          "field": "schedule",
+          "old_value": null,
+          "new_value": "Q1 2026",
+          "changed_by": "p5",
+          "reason": "Original schedule",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-01-01T09:00:00Z",
+          "field": "priority",
+          "old_value": null,
+          "new_value": "Medium",
+          "changed_by": "p5",
+          "reason": "Initial priority",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-17T10:00:00Z",
+          "field": "schedule",
+          "old_value": "Q1 2026",
+          "new_value": "Q2 2026",
+          "changed_by": "p9",
+          "reason": "Deprioritized behind Platform kickoff prep",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-02-17T10:00:00Z",
+          "field": "status",
+          "old_value": "In Progress",
+          "new_value": "Blocked",
+          "changed_by": "p9",
+          "reason": "Engineers pulled to other work",
+          "sources": []
+        },
+        {
+          "timestamp": "2026-03-18T10:30:00Z",
+          "field": "schedule",
+          "old_value": "Q2 2026",
+          "new_value": "Q3 2026",
+          "changed_by": "p5",
+          "reason": "Karen allocated to the Platform performance effort",
+          "sources": [
+            "slack_msg_009",
+            "slack_msg_025"
+          ]
+        },
+        {
+          "timestamp": "2026-03-18T10:30:00Z",
+          "field": "priority",
+          "old_value": "Medium",
+          "new_value": "Low",
+          "changed_by": "p5",
+          "reason": "Constantly deprioritized",
+          "sources": [
+            "slack_msg_009"
+          ]
+        },
+        {
+          "timestamp": "2026-05-05T09:00:00Z",
+          "field": "schedule",
+          "old_value": "Q3 2026",
+          "new_value": "Q4 2026",
+          "changed_by": "p9",
+          "reason": "Platform restored at $400K and still needs the team",
+          "sources": [
+            "slack_msg_031",
+            "slack_msg_032"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p9",
+          "timestamp": "2026-05-05T09:05:00Z",
+          "text": "Rescheduled to Q4. Will revisit next year."
+        }
+      ],
+      "links": {
+        "blocks": [],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_008",
+      "key": "PROJ-008",
+      "title": "Internal Tools Overhaul",
+      "project_id": "proj_008",
+      "status": "Approved",
+      "priority": "Medium",
+      "assignee_id": "p13",
+      "reporter_id": "p1",
+      "created": "2026-03-20",
+      "resolved": null,
+      "due_date": "2026-06-30",
+      "budget_usd": 80000,
+      "description": "Improve team productivity.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-03-20T11:30:00Z",
+          "field": "status",
+          "old_value": null,
+          "new_value": "Approved",
+          "changed_by": "p1",
+          "reason": "Emergency greenlight during budget cuts",
+          "sources": [
+            "dec_008",
+            "slack_msg_029"
+          ]
+        },
+        {
+          "timestamp": "2026-03-20T11:30:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 80000,
+          "changed_by": "p1",
+          "reason": "Approved budget",
+          "sources": [
+            "dec_008",
+            "slack_msg_029",
+            "slack_msg_085"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p1",
+          "timestamp": "2026-03-20T11:35:00Z",
+          "text": "Emergency greenlight during budget cuts. Goal is to improve velocity on the Platform timeline."
+        }
+      ],
+      "timeline": "Q2 2026",
+      "links": {
+        "blocks": [],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_009",
+      "key": "PROJ-009",
+      "title": "Platform Redesign - Performance",
+      "project_id": "proj_001",
+      "status": "In Progress",
+      "priority": "High",
+      "assignee_id": "p8",
+      "reporter_id": "p5",
+      "created": "2026-03-15",
+      "resolved": null,
+      "due_date": "2026-11-20",
+      "budget_usd": 400000,
+      "description": "Performance optimization only: keep existing DB, extend API. 8 month timeline. Split from PROJ-001.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-03-15T09:30:00Z",
+          "field": "status",
+          "old_value": null,
+          "new_value": "In Progress",
+          "changed_by": "p5",
+          "reason": "Split from PROJ-001",
+          "sources": [
+            "slack_msg_022"
+          ]
+        },
+        {
+          "timestamp": "2026-03-15T09:30:00Z",
+          "field": "budget_usd",
+          "old_value": null,
+          "new_value": 250000,
+          "changed_by": "p5",
+          "reason": "Reduced from $500K",
+          "sources": [
+            "dec_002",
+            "slack_msg_022"
+          ]
+        },
+        {
+          "timestamp": "2026-03-15T09:30:00Z",
+          "field": "priority",
+          "old_value": null,
+          "new_value": "Medium",
+          "changed_by": "p5",
+          "reason": "Created at reduced priority",
+          "sources": [
+            "slack_msg_022"
+          ]
+        },
+        {
+          "timestamp": "2026-03-20T09:20:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-11-20",
+          "changed_by": "p8",
+          "reason": "8 month timeline",
+          "sources": [
+            "slack_msg_027",
+            "slack_msg_028",
+            "doc_005"
+          ]
+        },
+        {
+          "timestamp": "2026-04-05T11:30:00Z",
+          "field": "budget_usd",
+          "old_value": 250000,
+          "new_value": 400000,
+          "changed_by": "p1",
+          "reason": "Restored to $400K",
+          "sources": [
+            "dec_003",
+            "slack_msg_032"
+          ]
+        },
+        {
+          "timestamp": "2026-04-05T11:30:00Z",
+          "field": "priority",
+          "old_value": "Medium",
+          "new_value": "High",
+          "changed_by": "p1",
+          "reason": "Series B dependency",
+          "sources": [
+            "dec_003",
+            "slack_msg_032"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p8",
+          "timestamp": "2026-03-20T09:25:00Z",
+          "text": "Tech Spec v2 published."
+        },
+        {
+          "author_id": "p8",
+          "timestamp": "2026-05-12T10:05:00Z",
+          "text": "p95 API latency down 31%."
+        }
+      ],
+      "links": {
+        "split_from": "ticket_001",
+        "blocks": [
+          "ticket_004",
+          "ticket_010"
+        ],
+        "blocked_by": []
+      }
+    },
+    {
+      "id": "ticket_010",
+      "key": "PROJ-010",
+      "title": "Series B Preparation",
+      "project_id": null,
+      "status": "In Progress",
+      "priority": "Highest",
+      "assignee_id": "p1",
+      "reporter_id": "p1",
+      "created": "2026-02-01",
+      "resolved": null,
+      "due_date": "2026-06-01",
+      "description": "Prepare for Series B. Requires: Platform working, Analytics available, Security audit done.",
+      "description_versions": [],
+      "requirements": [
+        {
+          "requirement": "Platform working",
+          "ticket_id": "ticket_009",
+          "status_as_of_2026-05-12": "In Progress (full redesign ends 2026-11-20; perf milestone targeted end of May)"
+        },
+        {
+          "requirement": "Analytics available",
+          "ticket_id": "ticket_003",
+          "status_as_of_2026-05-12": "Satisfied via vendor SaaS (sandbox live 2026-04-14)"
+        },
+        {
+          "requirement": "Security audit done",
+          "ticket_id": "ticket_005",
+          "status_as_of_2026-05-12": "Not Started; due 2026-06-30, after the June 1 target"
+        }
+      ],
+      "history": [
+        {
+          "timestamp": "2026-02-01T09:00:00Z",
+          "field": "due_date",
+          "old_value": null,
+          "new_value": "2026-06-01",
+          "changed_by": "p1",
+          "reason": "Series B target",
+          "sources": [
+            "doc_001"
+          ]
+        },
+        {
+          "timestamp": "2026-04-01T10:45:00Z",
+          "field": "description",
+          "old_value": "Requires custom Analytics Dashboard",
+          "new_value": "Requires Analytics available (vendor SaaS acceptable)",
+          "changed_by": "p1",
+          "reason": "Analytics switched to vendor",
+          "sources": [
+            "dec_006",
+            "slack_msg_073"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p1",
+          "timestamp": "2026-03-10T11:10:00Z",
+          "text": "Committed to Series B partners. Not moving the date."
+        },
+        {
+          "author_id": "p1",
+          "timestamp": "2026-04-05T11:35:00Z",
+          "text": "Platform budget restored because Series B depends on it."
+        }
+      ],
+      "links": {
+        "blocked_by": [
+          "ticket_009",
+          "ticket_003",
+          "ticket_005"
+        ],
+        "blocks": []
+      }
+    },
+    {
+      "id": "ticket_011",
+      "key": "PROJ-011",
+      "title": "Customer Portal",
+      "project_id": null,
+      "status": "Planning",
+      "priority": "High",
+      "assignee_id": "p14",
+      "reporter_id": "p1",
+      "created": "2026-02-15",
+      "resolved": null,
+      "due_date": null,
+      "budget_usd": 150000,
+      "description": "Customer Portal. Greenlit Feb 15. Needs data from the analytics dashboard.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-02-15T09:15:00Z",
+          "field": "status",
+          "old_value": null,
+          "new_value": "Planning",
+          "changed_by": "p1",
+          "reason": "Greenlit",
+          "sources": [
+            "slack_msg_065",
+            "slack_msg_066"
+          ]
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p14",
+          "timestamp": "2026-04-03T14:10:00Z",
+          "text": "Data will now come from the vendor feed instead of the in-house dashboard."
+        }
+      ],
+      "links": {
+        "blocked_by": [
+          "ticket_003"
+        ],
+        "blocks": []
+      }
+    },
+    {
+      "id": "ticket_012",
+      "key": "PROJ-012",
+      "title": "Incident Response Plan",
+      "project_id": "proj_005",
+      "status": "In Progress",
+      "priority": "High",
+      "assignee_id": "p6",
+      "reporter_id": "p6",
+      "created": "2026-03-01",
+      "resolved": null,
+      "due_date": "2026-04-15",
+      "description": "Incident response plan, created after a security concern was raised. Related to the Security Audit.",
+      "description_versions": [],
+      "history": [
+        {
+          "timestamp": "2026-03-01T09:00:00Z",
+          "field": "status",
+          "old_value": null,
+          "new_value": "In Progress",
+          "changed_by": "p6",
+          "reason": "Created after security concern raised",
+          "sources": []
+        }
+      ],
+      "comments": [
+        {
+          "author_id": "p6",
+          "timestamp": "2026-04-16T10:00:00Z",
+          "text": "Draft done, awaiting legal review. Slipped past 4/15."
+        }
+      ],
+      "links": {
+        "related_to": [
+          "ticket_005"
+        ],
+        "blocked_by": [],
+        "blocks": []
+      }
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc_001",
+      "title": "2026 Strategy - v1",
+      "family": "2026 Strategy",
+      "version": 1,
+      "author_id": "p1",
+      "created": "2026-01-01",
+      "status": "Approved",
+      "content": "2026 priorities: Platform Redesign ($500K), Mobile v2, Security Audit, Analytics.",
+      "key_facts": [
+        "Platform Redesign budget is $500K",
+        "Mobile v2 is planned",
+        "Analytics is built in-house"
+      ],
+      "supersedes": null,
+      "notes": null
+    },
+    {
+      "id": "doc_002",
+      "title": "2026 Strategy - v2",
+      "family": "2026 Strategy",
+      "version": 2,
+      "author_id": "p1",
+      "created": "2026-03-15",
+      "status": "Published",
+      "content": "Revised 2026 plan: Platform Redesign ($250K, scoped down), delay Mobile v2, prioritize Security, outsource Analytics.",
+      "key_facts": [
+        "Platform Redesign budget is $250K",
+        "Mobile v2 delayed",
+        "Security prioritized",
+        "Analytics outsourced"
+      ],
+      "supersedes": "doc_001",
+      "conflicts_with": [
+        "doc_001"
+      ],
+      "notes": "Contradicts v1 on budgets and priorities. Never updated after the April 1 cancellation of Mobile v2 or the April 5 restoration of Platform to $400K."
+    },
+    {
+      "id": "doc_003",
+      "title": "Q1 Financial Report",
+      "family": "Q1 Financial Report",
+      "version": 1,
+      "author_id": "p3",
+      "created": "2026-04-01",
+      "status": "Final",
+      "content": "Revenue down 15%. Cutting non-essential projects. Platform is critical.",
+      "key_facts": [
+        "Q1 revenue down 15%",
+        "Platform is critical"
+      ],
+      "supersedes": null,
+      "notes": "Final report is dated after the March 12 budget cut; the cut was based on preliminary Q1 numbers shared in #leadership on March 1."
+    },
+    {
+      "id": "doc_004",
+      "title": "Platform Redesign - Technical Spec v1",
+      "family": "Platform Redesign Technical Spec",
+      "version": 1,
+      "author_id": "p2",
+      "created": "2026-02-01",
+      "status": "Approved",
+      "content": "Complete backend refactor, new DB, new API, 6 month timeline.",
+      "key_facts": [
+        "New DB",
+        "New API",
+        "6 months"
+      ],
+      "supersedes": null,
+      "notes": null
+    },
+    {
+      "id": "doc_005",
+      "title": "Platform Redesign - Technical Spec v2",
+      "family": "Platform Redesign Technical Spec",
+      "version": 2,
+      "author_id": "p8",
+      "created": "2026-03-20",
+      "status": "Approved",
+      "content": "Performance optimization only, keep existing DB, extend API, 8 month timeline.",
+      "key_facts": [
+        "Keep existing DB",
+        "Extend API",
+        "8 months"
+      ],
+      "supersedes": "doc_004",
+      "conflicts_with": [
+        "doc_004"
+      ],
+      "notes": "Major descope, still called the same project."
+    },
+    {
+      "id": "doc_006",
+      "title": "Security Audit Requirements",
+      "family": "Security Audit Requirements",
+      "version": 1,
+      "author_id": "p6",
+      "created": "2026-03-05",
+      "status": "Final",
+      "content": "Regulatory requirement discovered. Need full audit by Q2.",
+      "key_facts": [
+        "Full audit required by Q2"
+      ],
+      "supersedes": null,
+      "notes": "Upgraded PROJ-005 priority."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec_001",
+      "key": "DEC-001",
+      "title": "Approve Platform Redesign",
+      "date": "2026-02-01",
+      "approver_id": "p1",
+      "status": "Modified",
+      "description": "Approved Platform Redesign: $500K, 6 months, led by Bob.",
+      "details": {
+        "budget_usd": 500000,
+        "duration_months": 6,
+        "lead_id": "p2"
+      },
+      "rationale": "2026 strategic priority.",
+      "superseded_by": [
+        "dec_002",
+        "dec_003"
+      ],
+      "reverses": null,
+      "sources": [
+        "doc_001",
+        "doc_004",
+        "slack_msg_001",
+        "slack_msg_076"
+      ],
+      "notes": "Slack kickoff announcement is dated March 1, a month after the approval date.",
+      "impact": null,
+      "overrides": [],
+      "dissent": []
+    },
+    {
+      "id": "dec_002",
+      "key": "DEC-002",
+      "title": "Cut Platform Redesign Budget",
+      "date": "2026-03-12",
+      "approver_id": "p3",
+      "status": "Superseded",
+      "description": "Platform Redesign budget cut from $500K to $250K.",
+      "details": {
+        "budget_usd_from": 500000,
+        "budget_usd_to": 250000
+      },
+      "rationale": "Q1 revenue shortfall.",
+      "impact": "Descoped by Diana to performance-only work.",
+      "superseded_by": [
+        "dec_003"
+      ],
+      "reverses": null,
+      "overrides": [
+        "dec_001"
+      ],
+      "sources": [
+        "slack_msg_077",
+        "slack_msg_078",
+        "slack_msg_080",
+        "slack_msg_014",
+        "slack_msg_016",
+        "slack_msg_021",
+        "slack_msg_025",
+        "doc_003",
+        "doc_002"
+      ],
+      "dissent": [
+        {
+          "person_id": "p2",
+          "sources": [
+            "slack_msg_079",
+            "slack_msg_017",
+            "slack_msg_081"
+          ]
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "dec_003",
+      "key": "DEC-003",
+      "title": "Restore Platform Redesign Budget",
+      "date": "2026-04-05",
+      "approver_id": "p1",
+      "status": "Active",
+      "description": "Platform Redesign budget restored to $400K (compromise). Overrides DEC-002.",
+      "details": {
+        "budget_usd_from": 250000,
+        "budget_usd_to": 400000,
+        "finance_system_effective": "2026-05-01"
+      },
+      "rationale": "Series B dependency, strategic importance.",
+      "superseded_by": [],
+      "reverses": null,
+      "overrides": [
+        "dec_002"
+      ],
+      "sources": [
+        "slack_msg_032",
+        "slack_msg_084",
+        "slack_msg_085"
+      ],
+      "impact": null,
+      "dissent": [],
+      "notes": null
+    },
+    {
+      "id": "dec_004",
+      "key": "DEC-004",
+      "title": "Delay Mobile App v2",
+      "date": "2026-03-10",
+      "approver_id": "p1",
+      "status": "Superseded",
+      "description": "Mobile App v2 launch moved from Q2 to Q3.",
+      "details": {
+        "launch_from": "Q2 2026",
+        "launch_to": "Q3 2026",
+        "alice_confirmed_in_slack": "2026-03-12"
+      },
+      "rationale": "Design complexity.",
+      "superseded_by": [
+        "dec_005"
+      ],
+      "reverses": null,
+      "sources": [
+        "slack_msg_044",
+        "slack_msg_046",
+        "slack_msg_047",
+        "slack_msg_048"
+      ],
+      "dissent": [
+        {
+          "person_id": "p10",
+          "sources": [
+            "slack_msg_045",
+            "slack_msg_049",
+            "slack_msg_052"
+          ]
+        }
+      ],
+      "impact": null,
+      "overrides": [],
+      "notes": null
+    },
+    {
+      "id": "dec_005",
+      "key": "DEC-005",
+      "title": "Cancel Mobile App v2",
+      "date": "2026-04-01",
+      "approver_id": "p1",
+      "status": "Active",
+      "description": "Mobile App v2 cancelled to focus on Platform.",
+      "details": {},
+      "rationale": "Platform more strategic.",
+      "reverses": "dec_004",
+      "superseded_by": [],
+      "sources": [
+        "slack_msg_054",
+        "slack_msg_057",
+        "slack_msg_082",
+        "slack_msg_083",
+        "slack_msg_056"
+      ],
+      "dissent": [
+        {
+          "person_id": "p10",
+          "sources": [
+            "slack_msg_055",
+            "slack_msg_058"
+          ]
+        }
+      ],
+      "notes": "#leadership message on April 1 said 'delay Mobile'; corrected April 2 to 'cancelled'.",
+      "impact": null,
+      "overrides": []
+    },
+    {
+      "id": "dec_006",
+      "key": "DEC-006",
+      "title": "Analytics - Build vs Buy",
+      "date": "2026-03-25",
+      "announced_date": "2026-04-01",
+      "approver_id": "p1",
+      "status": "Active",
+      "description": "Buy vendor solution (SaaS) instead of building the Analytics Dashboard in-house. Closes PROJ-003 and opens an integration ticket.",
+      "details": {
+        "initial": "Build internally",
+        "decision": "Buy vendor solution (SaaS)"
+      },
+      "rationale": "Same cost, 2 months faster, half the work.",
+      "superseded_by": [],
+      "reverses": null,
+      "sources": [
+        "slack_msg_069",
+        "slack_msg_070",
+        "slack_msg_071",
+        "slack_msg_072",
+        "slack_msg_073",
+        "slack_msg_074",
+        "doc_002"
+      ],
+      "notes": "Evaluated March 25; formally announced in Slack April 1.",
+      "impact": null,
+      "overrides": [],
+      "dissent": []
+    },
+    {
+      "id": "dec_007",
+      "key": "DEC-007",
+      "title": "Upgrade Security Audit Priority",
+      "date": "2026-03-05",
+      "approver_id": "p1",
+      "status": "Active",
+      "description": "Security Audit upgraded from low to high priority; budget increased to $150K.",
+      "details": {
+        "budget_usd_from": 50000,
+        "budget_usd_to": 150000
+      },
+      "rationale": "Regulatory requirement.",
+      "superseded_by": [],
+      "reverses": null,
+      "sources": [
+        "doc_006",
+        "slack_msg_010",
+        "slack_msg_085"
+      ],
+      "impact": null,
+      "overrides": [],
+      "dissent": [],
+      "notes": null
+    },
+    {
+      "id": "dec_008",
+      "key": "DEC-008",
+      "title": "Greenlight Internal Tools",
+      "date": "2026-03-20",
+      "approver_id": "p1",
+      "status": "Active",
+      "description": "Internal Tools Overhaul approved at $80K, Q2 timeline.",
+      "details": {
+        "budget_usd": 80000,
+        "timeline": "Q2 2026"
+      },
+      "rationale": "Improve velocity to hit Platform timeline.",
+      "superseded_by": [],
+      "reverses": null,
+      "sources": [
+        "slack_msg_029",
+        "slack_msg_085"
+      ],
+      "notes": "Approved during cost-cutting, which contradicts the spirit of DEC-002.",
+      "impact": null,
+      "overrides": [],
+      "dissent": []
+    }
+  ],
+  "relationships": {
+    "SLACK_MENTIONS_PROJECT": [
+      {
+        "message_id": "slack_msg_001",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_002",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_003",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_004",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_005",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_006",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_007",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_008",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_011",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_014",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_017",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_018",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_019",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_020",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_021",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_022",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_023",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_025",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_026",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_027",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_028",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_031",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_032",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_033",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_034",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_035",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_076",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_079",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_080",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_081",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_082",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_084",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_085",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_054",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_057",
+        "project_id": "proj_001"
+      },
+      {
+        "message_id": "slack_msg_036",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_037",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_038",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_039",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_040",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_041",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_042",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_043",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_044",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_045",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_046",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_047",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_048",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_049",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_050",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_051",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_052",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_053",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_054",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_055",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_056",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_057",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_058",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_059",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_060",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_076",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_082",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_083",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_085",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_031",
+        "project_id": "proj_002"
+      },
+      {
+        "message_id": "slack_msg_061",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_062",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_063",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_064",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_065",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_066",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_067",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_068",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_069",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_070",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_071",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_072",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_073",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_074",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_075",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_082",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_083",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_031",
+        "project_id": "proj_003"
+      },
+      {
+        "message_id": "slack_msg_012",
+        "project_id": "proj_004"
+      },
+      {
+        "message_id": "slack_msg_013",
+        "project_id": "proj_004"
+      },
+      {
+        "message_id": "slack_msg_030",
+        "project_id": "proj_004"
+      },
+      {
+        "message_id": "slack_msg_010",
+        "project_id": "proj_005"
+      },
+      {
+        "message_id": "slack_msg_024",
+        "project_id": "proj_005"
+      },
+      {
+        "message_id": "slack_msg_034",
+        "project_id": "proj_005"
+      },
+      {
+        "message_id": "slack_msg_076",
+        "project_id": "proj_005"
+      },
+      {
+        "message_id": "slack_msg_085",
+        "project_id": "proj_005"
+      },
+      {
+        "message_id": "slack_msg_005",
+        "project_id": "proj_006"
+      },
+      {
+        "message_id": "slack_msg_018",
+        "project_id": "proj_006"
+      },
+      {
+        "message_id": "slack_msg_085",
+        "project_id": "proj_006"
+      },
+      {
+        "message_id": "slack_msg_009",
+        "project_id": "proj_007"
+      },
+      {
+        "message_id": "slack_msg_029",
+        "project_id": "proj_008"
+      },
+      {
+        "message_id": "slack_msg_085",
+        "project_id": "proj_008"
+      }
+    ],
+    "SLACK_MENTIONS_TICKET": [
+      {
+        "message_id": "slack_msg_022",
+        "ticket_id": "ticket_001"
+      },
+      {
+        "message_id": "slack_msg_022",
+        "ticket_id": "ticket_009"
+      },
+      {
+        "message_id": "slack_msg_028",
+        "ticket_id": "ticket_009"
+      },
+      {
+        "message_id": "slack_msg_013",
+        "ticket_id": "ticket_004"
+      },
+      {
+        "message_id": "slack_msg_030",
+        "ticket_id": "ticket_004"
+      },
+      {
+        "message_id": "slack_msg_047",
+        "ticket_id": "ticket_002"
+      },
+      {
+        "message_id": "slack_msg_056",
+        "ticket_id": "ticket_002"
+      },
+      {
+        "message_id": "slack_msg_066",
+        "ticket_id": "ticket_011"
+      },
+      {
+        "message_id": "slack_msg_074",
+        "ticket_id": "ticket_003"
+      }
+    ],
+    "TICKET_BELONGS_TO_PROJECT": [
+      {
+        "ticket_id": "ticket_001",
+        "project_id": "proj_001"
+      },
+      {
+        "ticket_id": "ticket_002",
+        "project_id": "proj_002"
+      },
+      {
+        "ticket_id": "ticket_003",
+        "project_id": "proj_003"
+      },
+      {
+        "ticket_id": "ticket_004",
+        "project_id": "proj_004"
+      },
+      {
+        "ticket_id": "ticket_005",
+        "project_id": "proj_005"
+      },
+      {
+        "ticket_id": "ticket_006",
+        "project_id": "proj_006"
+      },
+      {
+        "ticket_id": "ticket_007",
+        "project_id": "proj_007"
+      },
+      {
+        "ticket_id": "ticket_008",
+        "project_id": "proj_008"
+      },
+      {
+        "ticket_id": "ticket_009",
+        "project_id": "proj_001"
+      },
+      {
+        "ticket_id": "ticket_012",
+        "project_id": "proj_005"
+      }
+    ],
+    "TICKET_BLOCKS_TICKET": [
+      {
+        "ticket_id": "ticket_001",
+        "blocks": "ticket_004",
+        "note": "Infrastructure Migration waits on Platform Redesign"
+      },
+      {
+        "ticket_id": "ticket_009",
+        "blocks": "ticket_004",
+        "note": "Dependency carried over to the performance ticket after the March 15 split"
+      },
+      {
+        "ticket_id": "ticket_001",
+        "blocks": "ticket_002",
+        "note": "Platform priorities cited as a blocker for Mobile v2 design"
+      },
+      {
+        "ticket_id": "ticket_009",
+        "blocks": "ticket_010",
+        "note": "Series B requires Platform working"
+      },
+      {
+        "ticket_id": "ticket_003",
+        "blocks": "ticket_010",
+        "note": "Series B requires Analytics; resolved April 1 via vendor SaaS"
+      },
+      {
+        "ticket_id": "ticket_005",
+        "blocks": "ticket_010",
+        "note": "Series B requires security audit; due June 30, after the June 1 target"
+      },
+      {
+        "ticket_id": "ticket_003",
+        "blocks": "ticket_011",
+        "note": "Customer Portal needs analytics data"
+      }
+    ],
+    "TICKET_SPLIT_FROM_TICKET": [
+      {
+        "ticket_id": "ticket_009",
+        "split_from": "ticket_001",
+        "date": "2026-03-15",
+        "sources": [
+          "slack_msg_022"
+        ]
+      }
+    ],
+    "TICKET_RELATED_TO_TICKET": [
+      {
+        "ticket_id": "ticket_012",
+        "related_to": "ticket_005"
+      }
+    ],
+    "DECISION_CONTRADICTS_DECISION": [
+      {
+        "decision_id": "dec_001",
+        "contradicts": "dec_002"
+      },
+      {
+        "decision_id": "dec_002",
+        "contradicts": "dec_003"
+      },
+      {
+        "decision_id": "dec_004",
+        "contradicts": "dec_005"
+      },
+      {
+        "decision_id": "dec_002",
+        "contradicts": "dec_008"
+      }
+    ],
+    "DECISION_SUPERSEDES_DECISION": [
+      {
+        "decision_id": "dec_002",
+        "supersedes": "dec_001"
+      },
+      {
+        "decision_id": "dec_003",
+        "supersedes": "dec_002"
+      },
+      {
+        "decision_id": "dec_005",
+        "supersedes": "dec_004"
+      }
+    ],
+    "DECISION_AFFECTS_PROJECT": [
+      {
+        "decision_id": "dec_001",
+        "project_id": "proj_001"
+      },
+      {
+        "decision_id": "dec_002",
+        "project_id": "proj_001"
+      },
+      {
+        "decision_id": "dec_003",
+        "project_id": "proj_001"
+      },
+      {
+        "decision_id": "dec_004",
+        "project_id": "proj_002"
+      },
+      {
+        "decision_id": "dec_005",
+        "project_id": "proj_002"
+      },
+      {
+        "decision_id": "dec_006",
+        "project_id": "proj_003"
+      },
+      {
+        "decision_id": "dec_007",
+        "project_id": "proj_005"
+      },
+      {
+        "decision_id": "dec_008",
+        "project_id": "proj_008"
+      }
+    ],
+    "DECISION_DOCUMENTED_IN": [
+      {
+        "decision_id": "dec_001",
+        "document_id": "doc_001"
+      },
+      {
+        "decision_id": "dec_001",
+        "document_id": "doc_004"
+      },
+      {
+        "decision_id": "dec_002",
+        "document_id": "doc_003"
+      },
+      {
+        "decision_id": "dec_002",
+        "document_id": "doc_005"
+      },
+      {
+        "decision_id": "dec_007",
+        "document_id": "doc_006"
+      }
+    ],
+    "DECISION_ANNOUNCED_IN_SLACK": [
+      {
+        "decision_id": "dec_001",
+        "message_id": "slack_msg_001"
+      },
+      {
+        "decision_id": "dec_002",
+        "message_id": "slack_msg_080"
+      },
+      {
+        "decision_id": "dec_002",
+        "message_id": "slack_msg_014"
+      },
+      {
+        "decision_id": "dec_003",
+        "message_id": "slack_msg_032"
+      },
+      {
+        "decision_id": "dec_003",
+        "message_id": "slack_msg_084"
+      },
+      {
+        "decision_id": "dec_004",
+        "message_id": "slack_msg_044"
+      },
+      {
+        "decision_id": "dec_004",
+        "message_id": "slack_msg_046"
+      },
+      {
+        "decision_id": "dec_005",
+        "message_id": "slack_msg_054"
+      },
+      {
+        "decision_id": "dec_006",
+        "message_id": "slack_msg_071"
+      },
+      {
+        "decision_id": "dec_006",
+        "message_id": "slack_msg_073"
+      },
+      {
+        "decision_id": "dec_007",
+        "message_id": "slack_msg_010"
+      },
+      {
+        "decision_id": "dec_008",
+        "message_id": "slack_msg_029"
+      }
+    ],
+    "DOCUMENT_SUPERSEDES_DOCUMENT": [
+      {
+        "document_id": "doc_002",
+        "supersedes": "doc_001"
+      },
+      {
+        "document_id": "doc_005",
+        "supersedes": "doc_004"
+      }
+    ],
+    "DOCUMENT_TRIGGERED_DECISION": [
+      {
+        "document_id": "doc_003",
+        "decision_id": "dec_002",
+        "note": "Final report dated April 1; cut based on preliminary numbers from March 1"
+      },
+      {
+        "document_id": "doc_006",
+        "decision_id": "dec_007"
+      }
+    ],
+    "PERSON_DISSENTS_DECISION": [
+      {
+        "person_id": "p2",
+        "decision_id": "dec_002",
+        "sources": [
+          "slack_msg_017",
+          "slack_msg_081"
+        ]
+      },
+      {
+        "person_id": "p10",
+        "decision_id": "dec_004",
+        "sources": [
+          "slack_msg_045",
+          "slack_msg_049"
+        ]
+      },
+      {
+        "person_id": "p10",
+        "decision_id": "dec_005",
+        "sources": [
+          "slack_msg_055",
+          "slack_msg_058"
+        ]
+      }
+    ]
+  }
+}
