@@ -16,9 +16,10 @@ All settings and all model instructions live in one configuration file. Secrets 
 | | similarity needed to repair a misquote | 0.9 |
 | | heading for missing information | "Not in company records" |
 | Provider-specific | separate reasoning output for reasoning models | on |
-| Graph | database location, graph name | a local database |
-| Web API | host, port, debug mode, maximum live-update size | all interfaces, a standard port, off, 1 MB |
-| Logs | folder for run logs | a local folder |
+| Graph | database location, graph name | a local database (`redis://localhost:6379/0`), `company_brain` |
+| Clearance | clearance levels (re-exported from schema.py) | MIN=0, MAX=5 |
+| Web API | host, port, debug mode, max attachments, max bytes | 127.0.0.1, 8000, off, 10 files, 10 MB/file, 25 MB total |
+| Logs | folder for run logs | `runs/` |
 | Instructions | generator, fix request, reviewer | |
 
 ## Loading rules
@@ -26,7 +27,7 @@ All settings and all model instructions live in one configuration file. Secrets 
 - **Loading:** read once, cached, and returned as read-only typed values.
 - **Location:** an environment variable can point at a different configuration file.
 - **Errors name the setting,** e.g. "generation output limit must be a positive whole number".
-- **Environment overrides:** only the database location and the default provider.
+- **Environment overrides:** database location, default provider, API host/port/debug.
 - **Instruction placeholders:** the missing-information heading is inserted with plain text replacement,
   never a templating step, because the reviewer's instructions contain literal structured-data examples.
   The fix request keeps a placeholder for the problem list.
@@ -37,10 +38,10 @@ All settings and all model instructions live in one configuration file. Secrets 
 
 | Setting | Purpose |
 |---|---|
-| One API key per provider | Decides which providers are available |
-| Default provider | Overrides the configured default |
-| Database location | Overrides the configured location |
-| Ingestion token | Enables live updates; unset means the endpoint is off |
-| Configuration location | Points at a different configuration file |
+| One API key per provider (`GROQ_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) | Decides which providers are available |
+| `DEFAULT_PROVIDER` | Overrides the configured default provider |
+| `FALKORDB_URL`, `FALKORDB_GRAPH_NAME` | Overrides the configured database location and graph name |
+| `API_HOST`, `API_PORT`, `API_DEBUG` | Overrides web API server host, port and debug reload |
+| `INGESTION_TOKEN` | Enables live updates (when implemented); unset means the endpoint is off |
 
 The example environment template lists only settings the system actually reads.

@@ -46,22 +46,29 @@ _NAME = "coalesce(" + ", ".join(f"entity.{name}" for name in schema.NAME_PROPERT
 _HAYSTACK = ("toLower(coalesce(n.name, '') + ' ' + coalesce(n.title, '') + ' ' + coalesce(n.key, '') + ' ' + "
              "coalesce(n.text, '') + ' ' + coalesce(n.content, '') + ' ' + coalesce(n.description, ''))")
 
+# every fixed query only touches nodes at or below the asker's clearance ($max_clearance); a node
+# without one counts as the most open level
+def _clear(node: str) -> str:
+    return f"coalesce({node}.clearance, $default_clearance) <= $max_clearance"
+
+
 OWNERS = f"""
 MATCH (owner)-[:OWNS]->(entity)
-WHERE toLower({_NAME}) CONTAINS $term
+WHERE toLower({_NAME}) CONTAINS $term AND {_clear("owner")} AND {_clear("entity")}
 RETURN owner.name AS owner, owner.role AS owner_role, {_NAME} AS owns, labels(entity) AS entity_type
 LIMIT $limit
 """
 
 INVOLVED = f"""
 MATCH (person:Person)-[rel]-(entity)
-WHERE NOT entity:Person AND toLower({_NAME}) CONTAINS $term
+WHERE NOT entity:Person AND toLower({_NAME}) CONTAINS $term AND {_clear("person")} AND {_clear("entity")}
 RETURN person.name AS person, type(rel) AS relationship, {_NAME} AS entity, labels(entity) AS entity_type
 LIMIT $limit
 """
 
 SEARCH = f"""
 MATCH (n)
+WHERE {_clear("n")}
 WITH n, {_HAYSTACK} AS haystack
 WITH n, size([term IN $terms WHERE haystack CONTAINS term]) AS hits
 WHERE hits > 0
@@ -101,36 +108,61 @@ def check_read_only(
 
 
 def plan_query(
-    query: str
-) -> tuple[str, dict]:
-    """Return (cypher, params) for a natural-language question or a raw Cypher query."""
+    query: str,
+    max_clearance: int = schema.MAX_CLEARANCE_LEVEL
+) -> tuple[str, dict, bool]:
+    """Return (cypher, params, is_raw_cypher) for a natural-language question or a raw Cypher query.
+
+    Template queries carry a clearance filter that only returns nodes at or below `max_clearance`.
+    Raw Cypher is run as written and filtered afterwards by row.
+    """
     if _CYPHER_START.match(query) or (_CYPHER_OTHER.match(query) and _CYPHER_BODY.search(query)):
         check_read_only(query)
-        return query, {}
+        return query, {}, True
 
     tokens = _words(query)
     words = set(tokens)
     limit = MAX_ROWS + 1  # one extra row tells us the result was cut
+    limit_params = {"limit": limit, "max_clearance": max_clearance, "default_clearance": schema.DEFAULT_CLEARANCE_LEVEL}
 
     if "who" in words and (words & {"own", "owns", "owner", "owned"} or re.search(r"\bresponsible for\b", query, re.I)):
         term = _after(r"\b(?:owns?|owner of|owned|responsible for)\b", query)
         if term:
-            return OWNERS, {"term": term.lower(), "limit": limit}
+            return OWNERS, {"term": term.lower(), **limit_params}, False
 
     if "who" in words and words & {"work", "works", "working", "worked", "involved"}:
         term = _after(r"\b(?:on|with|in)\b", query)
         if term:
-            return INVOLVED, {"term": term.lower(), "limit": limit}
+            return INVOLVED, {"term": term.lower(), **limit_params}, False
 
     if words & {"list", "show", "all"}:
         labels = [_TYPE_WORDS[word] for word in tokens if word in _TYPE_WORDS]
         if labels:
-            return f"MATCH (n:{labels[0]}) RETURN n AS node ORDER BY n.id LIMIT $limit", {"limit": limit}
+            cypher = (f"MATCH (n:{labels[0]}) WHERE {_clear('n')} RETURN n AS node ORDER BY n.id LIMIT $limit")
+            return cypher, dict(limit_params), False
 
     terms = sorted({word for word in tokens if word not in _STOPWORDS and len(word) > 2})
     if not terms:
         raise ValueError("nothing to search for; name an entity or write a read-only Cypher query")
-    return SEARCH, {"terms": terms, "limit": limit}
+    return SEARCH, {"terms": terms, **limit_params}, False
+
+
+def _visible(
+    rows: list[dict],
+    max_clearance: int
+) -> list[dict]:
+    # raw Cypher is not rewritten, so drop any row that returns a node above the asker's clearance;
+    # a node without a clearance counts as the most open level
+    visible = []
+    for row in rows:
+        if all(
+            not isinstance(value, dict)
+            or value.get(schema.CLEARANCE_PROPERTY) is None
+            or int(value[schema.CLEARANCE_PROPERTY]) <= max_clearance
+            for value in row.values()
+        ):
+            visible.append(row)
+    return visible
 
 
 def _row_text(
@@ -176,7 +208,10 @@ def _evidence(
     )
 
 
-def falkordb_query(query: str) -> list[Evidence | Note]:
+def falkordb_query(
+    query: str,
+    user=None
+) -> list[Evidence | Note]:
     """
     Query FalkorDB graph using natural language or read-only Cypher.
 
@@ -187,15 +222,19 @@ def falkordb_query(query: str) -> list[Evidence | Note]:
     - anything else -> keyword search over names, titles and text
     - Cypher starting with MATCH / WITH / RETURN / UNWIND -> run read-only
 
-    Each result row becomes its own citable source; a cut-off result adds a Note, which is not a source.
-    Failures raise; they never become sources.
+    Only nodes at or below the asker's clearance level are returned. Each result row becomes its own
+    citable source; a cut-off result adds a Note, which is not a source. Failures raise; they never
+    become sources.
     """
+    max_clearance = getattr(user, "level", None)
+    max_clearance = schema.MAX_CLEARANCE_LEVEL if max_clearance is None else int(max_clearance)
+
     client = get_client()
     if not client.available:
         raise RuntimeError("FalkorDB is not available")
 
-    cypher, params = plan_query(query.strip())
-    rows = client.query(cypher, params)
+    cypher, params, is_raw = plan_query(query.strip(), max_clearance=max_clearance)
+    rows = _visible(client.query(cypher, params), max_clearance) if is_raw else client.query(cypher, params)
 
     evidence_list = []
     for row in rows[:MAX_ROWS]:

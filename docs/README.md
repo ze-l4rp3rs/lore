@@ -6,20 +6,22 @@ from that graph, and every fact in an answer carries a quote from a specific rec
 
 These documents describe the system well enough to build it again from nothing.
 
-## Reading order
+## Reading order & Guides
 
-| Document | What it covers |
-|---|---|
-| Build plan | The order to build things in, with a "done when" test for each step |
-| Architecture | Components, how a question flows through them, the core concepts |
-| Graph schema | Entity types, properties, relationships, derived data, what is never stored |
-| Answer pipeline | Generator, citations, automatic checks, reviewer, fix rounds, best draft |
-| Tools | What each tool does, how tool results become citable sources, how to add a tool |
-| Ingestion | Loading a dataset, incremental updates, change reports, live updates, documents from files |
-| Interfaces | Command line, HTTP endpoints and the structure of a response |
-| Configuration | The settings, how they are loaded and validated, how secrets are handled |
-| Testing and evaluation | Fakes, the automated checks, golden questions, the evaluation runner |
-| Operations | Containers, local bring-up, security, logs |
+The `docs/` folder is the single declarative source of truth for all architecture and design decisions:
+
+| Document | File | What it covers |
+|---|---|---|
+| Build steps | [build_steps.md](build_steps.md) | Progress tracker and roadmap with checkboxes for all 15 build steps |
+| Architecture | [architecture.md](architecture.md) | Components, service pipeline, how a question flows, core concepts |
+| Graph schema | [schema.md](schema.md) | Entity types, node properties, relationship types, and clearance rules |
+| Answer pipeline | [answer-pipeline.md](answer-pipeline.md) | Generator, citations, automatic code checks, reviewer, fix rounds |
+| Tools | [tools.md](tools.md) | Available tools, Cypher query planning, clearance filtering, citable evidence |
+| Ingestion | [ingestion.md](ingestion.md) | Multi-format document ingestion (PDF, XML, MD, etc.), folder reconciliation |
+| Interfaces | [api.md](api.md) | Command line and FastAPI Web API request/response schemas, trace headers |
+| Configuration | [configuration.md](configuration.md) | System settings, loading rules, environment variable overrides |
+| Testing and evaluation | [testing-and-eval.md](testing-and-eval.md) | Testing rules, fakes, simulated models, and golden questions |
+| Operations | [operations.md](operations.md) | Containers, local bring-up, clearance security, execution logs |
 
 ## What it must do
 

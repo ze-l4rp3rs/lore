@@ -10,6 +10,7 @@ from src.validations.sources import (
     Source,
     SourceRegistry,
     build_registry,
+    has_source_headers,
     render_context,
     render_sources,
 )
@@ -28,6 +29,7 @@ __all__ = [
     "Source",
     "SourceRegistry",
     "build_registry",
+    "has_source_headers",
     "render_context",
     "render_sources",
 ]

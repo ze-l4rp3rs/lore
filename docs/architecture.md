@@ -26,24 +26,27 @@
 
 | Component | Responsibility |
 |---|---|
-| Interfaces | Take a question (and optional context text) and return the structured response |
+| Interfaces | CLI (`main.py`) and FastAPI server (`src/api/server.py`) accepting questions, clearance and attachments |
+| Service pipeline | `src/api/service.py`: extracts attachments, combines context, handles clearance, orchestrates workflow |
 | Provider selection | Picks a model provider from the keys available |
-| Answer workflow | Drafts, checks, fix rounds, best-draft choice, logging |
+| Answer workflow | Drafts, checks, fix rounds, best-draft choice, logging (`src/workflow/reflexion.py`) |
 | Tool loop | Runs the bounded "model → tools → model" exchange for one model call |
 | Verification | Source registry, quote matching and repair, sentence-level checks |
-| Tools | Read the graph and return citable evidence; one tool drafts follow-up actions |
+| Tools | Read the graph and return citable evidence, filtered by the caller's clearance level |
 | Graph client | Read-only parameterised queries; a separate write path used only by ingestion |
-| Ingestion | Turns datasets, documents and live deltas into graph records |
+| Ingestion | Incremental reconciliation of data files, document extraction via xberg |
 | Settings | One validated configuration, including all model instructions |
 | Run log | A record of every step of every run |
 
 ## How a question flows
 
-1. **Entry.** An interface receives the question and optional context, and a provider is chosen.
-2. **Registry.** The context is split into sources, each with a random identifier for this run.
-3. **Generator.** The model is called with the tool descriptions. Each tool result becomes one or more
-   sources and is shown back to the model. This repeats until the model answers or the tool budget
-   forces an answer.
+1. **Entry & Attachments.** An interface receives the question, clearance level, optional context text,
+   and file attachments. The service pipeline resolves attachments (plain text inline; raw binary bytes
+   extracted into text and metadata via xberg).
+2. **Context & Registry.** Context text and resolved file attachments are combined with record headers
+   (`[context: ...]` / `[file: ...]`) into the source registry, each with a random identifier for this run.
+3. **Generator & Tools.** The model is called with tool schemas. Tool calls receive the caller's clearance
+   level and return only matching graph records. Each result becomes one or more citable sources.
 4. **Checks.** Citations are repaired, the draft is split into sentences, automatic checks run, and the
    reviewer judges each sentence. The reviewer has no tools, sees the same sources, and sees which tool
    produced which source.
@@ -51,7 +54,8 @@
    problems.
 6. **Result.** The best draft is kept, unsupported sentences are removed, citations are numbered, a
    readable version is rendered and the run is logged.
-7. **Response.** The result is turned into the response structure (see Interfaces).
+7. **Response.** The result is turned into the response structure (see Interfaces), and API requests
+   attach a performance trace (`metadata.trace`).
 
 ## Core concepts
 

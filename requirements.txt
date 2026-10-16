@@ -4,3 +4,6 @@ google-genai==2.30.1
 python-dotenv==1.0.1
 falkordb==1.7.1
 redis==8.1.0
+fastapi==0.143.2
+uvicorn[standard]==0.54.0
+xberg==1.3.9

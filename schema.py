@@ -5,13 +5,24 @@ Defines entity types, relationships, and property mappings
 to support any company structure without hard-coding.
 
 Who reads what:
-- scripts/ingest_company_data.py: ENTITY_TYPES, DATASET_SECTIONS, FIELD_EDGES, RELATIONSHIP_SECTIONS,
-  EXCLUDED_FIELDS. Every node label and edge type it writes is listed here.
-- src/tools/falkordb_query.py: NAME_PROPERTIES (a node's display name). ENTITY_TYPES and DATE_PROPERTIES are
-  for the graph tools still to come (ownership, expertise, decision tracing, timelines).
+- src/ingestion/sync.py (used by scripts/ingest_company_data.py): ENTITY_TYPES, DATASET_SECTIONS,
+  FIELD_EDGES, RELATIONSHIP_SECTIONS, EXCLUDED_FIELDS, and the CLEARANCE_* constants. Every node label,
+  edge type and clearance rule it writes is listed here.
+- src/tools/falkordb_query.py: NAME_PROPERTIES (a node's display name) and the CLEARANCE_* constants (it
+  returns only nodes at or below the asker's level). ENTITY_TYPES and DATE_PROPERTIES are for the graph
+  tools still to come (ownership, expertise, decision tracing, timelines).
 - documentation only: RELATIONSHIP_TYPES descriptions, PROPERTY_ALIASES, NODE_PROPERTIES,
   CONFLICT_EDGES, SOURCE_AUTHORITY.
 """
+
+# Clearance levels. Every node carries one, so the graph can be served to askers at different
+# trust levels: a tool returns only nodes whose clearance is at or below the asker's level.
+# Records that do not set one get DEFAULT_CLEARANCE_LEVEL. The scale is whole numbers, higher = more
+# restricted. This is the single definition; config.py and the API read these constants.
+CLEARANCE_PROPERTY = "clearance"
+MIN_CLEARANCE_LEVEL = 0
+MAX_CLEARANCE_LEVEL = 5
+DEFAULT_CLEARANCE_LEVEL = 0  # most open; what a record without an explicit level is treated as
 
 # Entity types that can exist in the graph (node labels)
 ENTITY_TYPES = [
@@ -131,36 +142,37 @@ PROPERTY_ALIASES = {
 NODE_PROPERTIES = {
     "Person": {
         "required": ["id", "name"],
-        "optional": ["email", "role", "department", "start_date", "reports_to", "team_id"],
+        "optional": ["email", "role", "department", "start_date", "reports_to", "team_id", CLEARANCE_PROPERTY],
     },
     "Team": {
         "required": ["id", "name"],
-        "optional": [],
+        "optional": [CLEARANCE_PROPERTY],
     },
     "Project": {
         "required": ["id", "name"],
         "optional": ["department", "status", "priority", "scope", "budget_usd", "target_end",
-                     "ticket_ids", "decision_ids", "document_ids"],
+                     "ticket_ids", "decision_ids", "document_ids", CLEARANCE_PROPERTY],
     },
     "Decision": {
         "required": ["id", "title"],
         "optional": ["key", "date", "announced_date", "status", "description", "details", "rationale", "impact",
-                     "superseded_by", "overrides", "reverses", "sources", "dissent"],
+                     "superseded_by", "overrides", "reverses", "sources", "dissent", CLEARANCE_PROPERTY],
     },
     "Document": {
         "required": ["id", "title"],
         "optional": ["family", "version", "created", "status", "content", "key_facts", "supersedes",
-                     "conflicts_with"],
+                     "conflicts_with", "location", "format", CLEARANCE_PROPERTY],
     },
     "Ticket": {
         "required": ["id", "title"],
         "optional": ["key", "project_id", "status", "priority", "created", "resolved", "due_date", "budget_usd",
                      "description", "comments", "links", "blocker", "blockers", "resolution", "schedule",
-                     "timeline", "requirements", "launch_target"],
+                     "timeline", "requirements", "launch_target", CLEARANCE_PROPERTY],
     },
     "SlackMessage": {
         "required": ["id", "text"],
-        "optional": ["channel", "username", "timestamp", "thread_ts", "reactions", "mentioned"],
+        "optional": ["channel", "username", "timestamp", "thread_ts", "reactions", "mentioned",
+                     CLEARANCE_PROPERTY],
     },
 }
 

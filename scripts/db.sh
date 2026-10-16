@@ -1,4 +1,5 @@
 # Manage the local FalkorDB: scripts/db.sh up | ingest | status | down | reset
+# These commands are for local development. To load production data, see README "Ingesting data".
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -13,8 +14,8 @@ case "${1:-}" in
     echo "Browser:   http://localhost:${BROWSER_PORT}"
     ;;
   ingest)
-    # clears the graph named in config.py, then loads the dataset
-    FALKORDB_URL="redis://localhost:${PORT}/0" python scripts/ingest_company_data.py "${2:-company_brain_dataset.json}"
+    # incrementally reconciles the graph with the source folder (default data/)
+    FALKORDB_URL="redis://localhost:${PORT}/0" python scripts/ingest_company_data.py "${2:-data}"
     ;;
   status)
     docker compose ps
@@ -28,7 +29,7 @@ case "${1:-}" in
     docker compose down --volumes
     ;;
   *)
-    echo "usage: scripts/db.sh up | ingest [dataset.json] | status | down | reset" >&2
+    echo "usage: scripts/db.sh up | ingest [data-dir] | status | down | reset" >&2
     exit 1
     ;;
 esac

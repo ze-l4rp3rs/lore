@@ -1,12 +1,20 @@
 # Ingestion
 
-## Dataset shape
+## Data shape
 
-A dataset has:
-- one section per entity type (people, teams, projects, tickets, documents, decisions, chat messages),
-  each a list of records with an identifier;
-- typed relationship lists;
-- general metadata, which is never ingested.
+The sources live in a folder (`data/` by default), which can hold:
+- **Structured dataset files (`.json`):** containing zero or more sections per entity type (people, teams,
+  projects, tickets, documents, decisions, chat messages) and optional named relationship lists.
+- **Actual company documents (PDF, DOCX, XML, Markdown, plain text, etc.):** extracted using xberg into
+  `Document` nodes. Each document node's `id` is its relative path inside the folder (e.g.
+  `policies/security.pdf`), allowing structured entities in `.json` files to link directly to it (e.g.
+  via `DECISION_DOCUMENTED_IN` or `DOCUMENT_SUPERSEDES_DOCUMENT`).
+
+The sections and the fields that become edges are defined in [schema.py](../schema.py)
+(`DATASET_SECTIONS`, `FIELD_EDGES`, `RELATIONSHIP_SECTIONS`). Node **ids are unique across the whole
+folder**, and every id an edge references must be defined somewhere in the folder. Any record may carry a
+`clearance` (0 to 5, defaulting to the most open level); see the README "Clearance" section.
+`company_brain_dataset.json` is a single-file example of the full JSON shape.
 
 ## Plan first, then write
 
@@ -22,51 +30,53 @@ Everything is planned before anything is written, so a bad reference fails witho
    - every relationship endpoint must exist with the expected type, or the run fails naming the
      offending entry;
    - evidence identifiers that point to nothing are reported, never dropped silently.
-4. **Deduplication:** each relationship is written once, with list properties combined. Its origin is
-   the first record that produced it.
+4. **Deduplication:** each relationship is written once. Its origin is the first source file that
+   produced it.
 
 All writes are batched and parameterised, and failures are never silently ignored. A failing batch is
 retried entry by entry, so the error names the entry.
 
 ## Incremental update
 
-The default mode:
+Ingestion is incremental and additive by default, and safe against a live database. State lives in a
+manifest (`.ingest_manifest.json`) next to the source folder:
 
-1. Read what the graph holds: records by type, and every relationship that has an origin.
-2. **Records:** compare each record's content fingerprint (taken from the whole source record, minus
-   authoring notes) with the stored one. Only added and changed records are written. A write replaces
-   all of a record's properties, so stale ones disappear, and updates its "last written" time.
-3. **Relationships:** an existing relationship whose origin is a record in this input, but which the
-   input no longer implies, is removed (for example the old ownership after an owner change). For
-   relationship lists this happens only when the input is a complete dataset.
-4. **Change records** that a record's history no longer contains are removed with it.
-5. **Current flags** are computed over the graph as it will be after the update, and rewritten only on
-   records whose flag actually flips (for example the previous version when a new document version
-   arrives).
-6. **Report:** added, changed and unchanged per entity type; relationships written and removed; current
-   flags updated; records removed.
+1. **Hashing:** every source file is content-hashed. Files are classified against the manifest as added,
+   changed, removed or unchanged.
+2. **Plan:** all files are planned together (records and relationships) and validated as one dataset, so
+   cross-file references are checked before anything is written.
+3. **Removals first:** a node id that appeared in the manifest but no longer appears in any file is
+   deleted (`DETACH DELETE` by id). The graph is never cleared.
+4. **Edges:** every edge owned by a changed or removed file (`r.origin`) is deleted; added and changed
+   files then write their current nodes (`MERGE` on id, `SET n = row`) and edges (`MERGE` + `SET r`).
+   Unchanged files are skipped entirely.
+5. **Manifest:** each written file's hash and the node ids it defines are recorded.
 
-| Mode | Effect |
+| Run | Effect |
 |---|---|
-| Default | Incremental update. Loading the same data twice reports everything unchanged and writes nothing. |
-| Prune | Also removes dataset records missing from the input. Documents loaded from files are never pruned. |
-| Full rebuild | Empties the graph and reloads. It requires explicit confirmation. |
+| Default | Incremental reconcile. Loading the same sources twice reports everything unchanged and writes nothing. |
+| `--dry-run` | Report what would change; write nothing. |
+
+Nothing outside the sources is ever removed. A production graph can hold records that the sources do not
+describe; they are left alone. There is no full-rebuild mode: to start over, reset the database
+(`scripts/db.sh reset`).
+
+A file is the unit of change: editing one record re-writes that file's nodes. Per-record change tracking
+is a later step.
 
 ## Live updates
 
-The web API accepts a partial update shaped like the dataset, e.g. one new or edited decision:
-- it may reference records already in the graph;
-- nothing outside the update is removed;
-- the response is the change report.
-
-The endpoint is off unless an ingestion token is configured. When it is on, requests must present the
-token (compared in constant time), and the body has a size limit.
+A live update endpoint (partial dataset in, change report out) is a later step; only the offline script
+exists today.
 
 ## Documents from files
 
-A document extraction library turns files (PDF, office formats, Markdown, plain text and more) into text
-and metadata:
+xberg ([pypi](https://pypi.org/project/xberg/)) turns files (PDF, office formats, Markdown, plain text
+and more) into text and metadata. `src/ingestion/extractor.py` is the one seam: it takes file bytes plus
+the file's name and content type and returns the text and metadata, or raises `ExtractionError`.
+Request attachments use it today (see Interfaces); ingestion of documents from files uses the same call.
 - each file becomes a document record whose identity comes from its location, so re-loading updates it in
   place;
 - files that cannot be extracted are reported and skipped;
-- the library is optional, and without it the feature says how to enable it.
+- the library is optional at runtime: if it is not installed the extractor raises `ExtractionUnavailable`
+  ("run: pip install xberg") and callers report it instead of failing.

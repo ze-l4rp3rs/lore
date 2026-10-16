@@ -1,5 +1,10 @@
 runs
 
+.ingest_manifest.json
+.*.manifest.json
+
+/data
+
 # LibreOffice lock files
 .~lock.*#
 

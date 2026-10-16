@@ -12,22 +12,92 @@ python main.py -c orion.txt "Who owns the Keycloak rollout?"
 - The question is the positional argument, or is prompted for when left out. `-c/--context` is an
   optional context file. It is split into sources at its `[kind: label, date]` header lines.
 - The CLI prints the structured JSON response (see [Response](#response)). The readable version, with
-  numbered footnotes, is written to `runs/*.md`.
+  numbered footnotes, is written to `runs/*.md`. It takes `--clearance-level` and `-a/--attachment` too.
+
+The web API runs the same pipeline:
+
+```bash
+.venv/bin/python -m src.api.server     # 127.0.0.1:8000 by default
+curl -s localhost:8000/ask -H 'content-type: application/json' \
+  -d '{"question": "Who owns the Platform Redesign project?", "clearance_level": 3}'
+```
+
+Every request names a `clearance_level` and may carry attachments, and returns a `metadata.trace` (also
+the `X-Request-ID` header) describing the clearance used, what was attached, the provider, the run log
+and the time each stage took. Attachments are text inline or raw bytes; raw bytes (a file base64d in the
+request) are turned into text by xberg. See [docs/api.md](docs/api.md).
 
 To query the company graph instead of a context file, start FalkorDB, load the dataset, then ask:
 
 ```bash
 scripts/db.sh up        # FalkorDB on localhost:6379, browser UI on http://localhost:3000
-scripts/db.sh ingest    # loads company_brain_dataset.json
+scripts/db.sh ingest company_brain_dataset.json   # or a data/ folder; see "Ingesting data"
 python main.py "Who owns the Platform Redesign project?"
 scripts/db.sh down      # clean exit (keeps the data); `scripts/db.sh reset` also deletes it
 ```
 
-- The ingest script **clears the whole `company_brain` graph** before loading, so a second run rebuilds
-  the same graph. Point `FALKORDB_GRAPH_NAME` in `config.py` elsewhere if that name is already in use.
 - If port 6379 or 3000 is taken, set `FALKORDB_PORT` / `FALKORDB_BROWSER_PORT` (and `FALKORDB_URL` for the
   agent). The ports are bound to `localhost` only, and the image has no password.
 - With no context file and no database, the model has nothing to answer from.
+
+### Ingesting data
+
+`scripts/db.sh ingest` (or `python scripts/ingest_company_data.py [source]`) reconciles the graph with a
+folder of source files and is safe to run repeatedly against a live database:
+
+```bash
+scripts/db.sh ingest                 # reads the data/ folder
+scripts/db.sh ingest path/to/data    # or any folder, or a single .json file
+python scripts/ingest_company_data.py data --dry-run   # report what would change, write nothing
+```
+
+It is **incremental and additive**. Each source file is hashed and remembered in a manifest
+(`data/.ingest_manifest.json`) next to the source, together with the node ids that file defined. On the
+next run only **added** and **changed** files are written; unchanged files are skipped. A changed file's
+edges are replaced with the new ones, and a node id that no longer appears in **any** file is deleted
+(with its edges). Nothing else is ever cleared, so it never disturbs unrelated data.
+
+The source folder (`data/` is the default, and is created by you) holds structured `.json` dataset
+files and/or company documents (PDF, DOCX, XML, Markdown, plain text, etc.). Company documents are
+extracted using xberg into `Document` nodes with their relative path as the node `id` (e.g. `specs/api.xml`),
+making them directly citable and connectable.
+
+Structured `.json` files may contain any subset of the sections below; together all files form one dataset.
+Node **ids must be unique across the whole folder**, and every id referenced by an edge must be defined
+somewhere in the folder. A file may set a `clearance` on any record (see [Clearance](#clearance)); files
+and records without one default to the most open level.
+
+```json
+{
+  "people":    [{"id": "p1", "name": "Dana Okafor", "role": "CTO", "clearance": 3}],
+  "teams":     [{"id": "t1", "name": "Platform"}],
+  "projects":  [{"id": "pr1", "name": "Platform Redesign", "department": "Platform", "status": "active"}],
+  "documents": [{"id": "d1", "title": "Redesign brief", "content": "...", "created": "2026-01-05"}],
+  "decisions": [{"id": "dc1", "title": "Adopt Rust", "date": "2026-02-01", "status": "active"}],
+  "tickets":   [{"id": "tk1", "title": "Cut SMPP", "project_id": "pr1", "status": "open"}],
+  "slack_messages": [{"id": "s1", "text": "...", "channel": "#platform", "user_id": "p1"}],
+  "relationships": {
+    "owns": [{"person_id": "p1", "project_id": "pr1", "since": "2026-01-01"}]
+  }
+}
+```
+
+- Sections and the fields that become edges are defined in [schema.py](schema.py): `DATASET_SECTIONS` maps
+  a section to a node label, and `FIELD_EDGES` / `RELATIONSHIP_SECTIONS` map fields and named edge lists
+  to relationships. `company_brain_dataset.json` is a single-file example of the full shape.
+- Split a dataset across files however you like (by team, by import, …). An edited file is re-planned as a
+  whole, so it is the unit of change.
+- The manifest is per source folder; keep it when you move or change data. Add it to version control only
+  if you want the incremental state to travel with the folder. Point `FALKORDB_GRAPH_NAME` in `config.py`
+  elsewhere if `company_brain` is already in use.
+
+### Clearance
+
+Every node stores a `clearance` (whole number, `0`..`5`; higher is more restricted). Askers pass a
+`clearance_level` on every request, and the graph tool returns only nodes at or below that level, so a
+low-clearance asker never sees restricted records. The scale, the default and the property name are
+defined once in [schema.py](schema.py) and re-exported by `config.py`; records without a `clearance`
+default to the most open level.
 
 Provider selection:
 - One API key set: that provider is used.
@@ -35,36 +105,12 @@ Provider selection:
 - Several keys and no terminal: `DEFAULT_PROVIDER` decides (from `.env` or `config.py`).
 - No keys: the run fails with a message listing the env vars to set.
 
-## Status
+## Status & Roadmap
 
-The project follows the 15 steps in [docs/build-plan.md](docs/build-plan.md); design docs are in
-[docs/](docs/README.md).
+The project follows the 15-step roadmap tracked in [docs/build_steps.md](docs/build_steps.md).
+The [docs/](docs/README.md) folder is the single declarative source of truth for all guides and architectural specifications.
 
-**Done**
-- Question answering over a context file (generator and reflector models) with fix rounds.
-- Tool calling with a registry, a bounded loop and a per-run tool memo. Two tools: `get_time` and `falkordb_query`.
-- Three provider adapters (Groq, Claude, Gemini) with tool calling, and automatic provider selection.
-- Citations: every fact carries a checked quote, and the answer is rendered with numbered footnotes.
-- Verification: code-side citation checks, then a per-sentence review by the reflector. Unsupported
-  sentences are removed and listed.
-- Structured response (`src/api/response.py`) and JSON plus markdown run logs.
-- FalkorDB graph: client, schema, idempotent ingestion of `company_brain_dataset.json` (the synthetic
-  "Meridian" company: 144 nodes, 321 edges), run through `docker-compose.yml` and `scripts/db.sh`.
-- `falkordb_query` tool: natural language or read-only Cypher. A row that is one node becomes a source of
-  its real type, title, date and node id, so the same node found twice is one source.
-- Checked live on Groq against the running graph: questions on ownership and on budget decisions
-  (superseded and active) came back `verified` with correct citations.
-
-**Next: graph tools** (build-plan step 10; see [docs/tools.md](docs/tools.md))
-- Dedicated tools on top of the graph: ownership lookup, expertise lookup, decision tracing (what
-  superseded or contradicted what) and timelines. Today the model has one general `falkordb_query` tool.
-- Check the generator against the dataset's traps: superseded decisions, reassignments, a stale strategy
-  document, dissent, and a question with a false premise.
-- Turn the graph records into richer evidence (a decision's rationale and status, a change's old and new
-  value) and carry the current/superseded status through to the response.
-
-**Later:** web API, a configuration file, history and freshness status, incremental updates, evaluation
-and proposed actions (steps 8 and 11 to 15).
+For the full breakdown of what is completed and what is coming next, see [docs/build_steps.md](docs/build_steps.md).
 
 **Known gaps**
 - [x] The model can query the graph: `falkordb_query` returns graph nodes as typed, citable sources.
@@ -74,7 +120,10 @@ and proposed actions (steps 8 and 11 to 15).
   type, keyword search); anything else is a keyword search or raw read-only Cypher.
 - [ ] Rows made of columns (for example `RETURN d.key, d.title`) stay generic "Graph result" sources, because
   they are not one node.
-- [ ] Ingestion always rebuilds the graph. Incremental updates are a later step.
+- [ ] Ingestion reconciles by file: editing a large file rewrites all of that file's nodes. Per-record
+  change tracking is a later step.
+- [ ] Raw Cypher can only be filtered by returned node rows; a raw query that returns bare columns is not
+  clearance-filtered. The fixed query shapes always are.
 - [ ] A run on Groq's free tier can take minutes, because of rate-limit waits.
 - [ ] The generator sometimes writes "Not in company records: none" instead of leaving the heading out.
 
@@ -112,11 +161,12 @@ main.py ──► select_provider ──► run(provider, question, context) ─
 | `src/storage/run_logger.py` | Writes each run as JSON plus markdown |
 | `src/retrieval/falkordb_client.py` | `FalkorDBClient`: parameterised read-only `query()` returning dict rows, and a separate `write()` used only by ingestion |
 | `src/tools/falkordb_query.py` | The graph tool: natural language or read-only Cypher in, one `Evidence` per row out (plus a `Note` when the result is cut off) |
-| `schema.py` | Node labels, edge types and which dataset fields become which edges. Ingestion reads most of it; the tool reads the name and date properties |
-| `scripts/ingest_company_data.py` | Loads the dataset into FalkorDB: `MERGE` on ids through `UNWIND` with parameters |
-| `company_brain_dataset.json` | The synthetic company dataset |
+| `schema.py` | Node labels, edge types, which dataset fields become which edges, and the clearance scale. Ingestion reads most of it; the tool reads the name, date and clearance constants |
+| `scripts/ingest_company_data.py` | Thin CLI over `src/ingestion/sync.py`: reconciles a `data/` folder (or one file) into FalkorDB, incrementally |
+| `src/ingestion/sync.py` | The incremental ingester: hashes each source file, plans nodes and edges, writes only what changed, and deletes only node ids no source defines any more |
+| `company_brain_dataset.json` | The synthetic company dataset (a single-file example of the `data/` format) |
 | `docker-compose.yml`, `scripts/db.sh` | FalkorDB with a health check and its browser UI; `db.sh` starts, loads, stops and resets it |
-| `src/ingestion/` | Empty. Reserved for the later ingestion work |
+| `src/ingestion/extractor.py` | `extract_bytes(...)`: turns attachment bytes into text with xberg |
 
 ## Data classes
 

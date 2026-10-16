@@ -17,10 +17,10 @@ def get_time() -> str:
     return now.strftime("%Y-%m-%d:%H-%M")
 
 
-def falkordb_query(query: str):
+def falkordb_query(query: str, user=None):
     # imported on first use, so the database driver is only needed when the tool is called
     from src.tools.falkordb_query import falkordb_query as _query
-    return _query(query)
+    return _query(query, user=user)
 
 
 AVAILABLE_FUNCTIONS: dict[str, Callable[..., Any]] = {

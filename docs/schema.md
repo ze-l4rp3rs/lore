@@ -18,6 +18,11 @@ and property names are defined once, so the documentation and the behaviour cann
 
 Every ingested record also carries a content fingerprint and the time it was last written.
 
+**Clearance.** Every node has a `clearance` property: a whole number from 0 (open) to 5 (most
+restricted), defined once in the schema. A record that sets none gets 0. A user at level N sees only
+nodes with clearance N or lower. The level comes from the data files; the API request supplies only the
+asker's level, never a user identity.
+
 **Property rules**
 - Simple values and lists of simple values are stored as they are.
 - Nested structures are stored as text.

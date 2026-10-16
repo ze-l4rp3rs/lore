@@ -34,6 +34,10 @@ Ingestion can also run inside the agent container.
 ## Security
 
 - **Secrets** live only in the environment. Configuration names them but never holds them.
+- **Clearance and data isolation:** every query is constrained by the caller's clearance level (0 to 5);
+  lower-clearance askers never receive restricted nodes or relationships. Raw Cypher results are post-filtered.
+- **Attachment safety:** incoming request attachments are checked against count and byte size limits
+  (10 files max, 10 MB per file, 25 MB total) before extraction.
 - **The model cannot change the graph:**
   - tool queries are read-only;
   - model-written queries are screened for anything that writes, and run read-only regardless;

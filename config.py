@@ -1,3 +1,5 @@
+import schema
+
 # LLM Provider Configuration
 # provider name -> env var that holds its API key (the router looks for these in .env)
 PROVIDER_KEYS = {
@@ -29,6 +31,18 @@ FALKORDB_URL = "redis://localhost:6379/0"
 FALKORDB_GRAPH_NAME = "company_brain"
 
 RUNS_FOLDER = "runs"
+
+# Clearance levels are defined once in schema.py; re-exported here for the API and the CLI
+MIN_CLEARANCE_LEVEL = schema.MIN_CLEARANCE_LEVEL
+MAX_CLEARANCE_LEVEL = schema.MAX_CLEARANCE_LEVEL
+
+# Web API (see docs/api.md); host/port/debug can be overridden with the environment variables of the same name
+API_HOST = "127.0.0.1"
+API_PORT = 8000
+API_DEBUG = False
+MAX_ATTACHMENTS = 10  # per request
+MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024  # per attachment, after base64 decoding
+MAX_TOTAL_ATTACHMENT_BYTES = 25 * 1024 * 1024  # all attachments in one request
 
 GAPS_HEADING = "**Not in company records:**"
 

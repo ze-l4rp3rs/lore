@@ -85,6 +85,13 @@ class SourceRegistry:
         return self._by_id.get(source_id)
 
 
+def has_source_headers(
+    text: str
+) -> bool:
+    # True when the text already uses "[kind: label]" record headers and splits into several sources
+    return _SOURCE_HEADER.search(text) is not None
+
+
 def build_registry(
     context: str
 ) -> SourceRegistry:

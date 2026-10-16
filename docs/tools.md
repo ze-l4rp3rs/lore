@@ -10,8 +10,9 @@
   error never becomes a citable source.
 - **Graph queries are read-only and parameterised:** text from the user or the model is never inserted
   into a query.
-- **A user identity,** if a tool needs one, is supplied by the system, never by the model. The tool must
-  return only what that user may see.
+- **The asker's clearance,** if a tool needs it, is supplied by the system, never by the model. The tool
+  must return only nodes whose `clearance` is at or below the asker's level. The general graph search
+  filters its query shapes in the query itself, and drops over-level nodes from raw query results.
 
 ## Turning graph records into evidence
 
