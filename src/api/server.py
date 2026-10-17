@@ -1,10 +1,7 @@
 import base64
 import binascii
 import os
-import sys
 from typing import Any
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
@@ -14,7 +11,6 @@ import config
 from src.api.response import build_response
 from src.api.service import Attachment, Clearance, answer_question
 from src.api.trace import RequestTrace
-
 
 class AttachmentIn(BaseModel):
     filename: str = Field(min_length=1)
@@ -28,13 +24,11 @@ class AttachmentIn(BaseModel):
             raise ValueError("exactly one of 'text' or 'data_base64' is required")
         return self
 
-
 class AskRequest(BaseModel):
     question: str = Field(min_length=1)
     context: str = ""
     clearance_level: int = Field(default=config.MIN_CLEARANCE_LEVEL, ge=config.MIN_CLEARANCE_LEVEL, le=config.MAX_CLEARANCE_LEVEL)
     attachments: list[AttachmentIn] = Field(default_factory=list)
-
 
 def _decode_attachment(item: AttachmentIn) -> Attachment:
     data = b""
@@ -53,7 +47,6 @@ def _decode_attachment(item: AttachmentIn) -> Attachment:
         raise HTTPException(413, f"attachment {item.filename!r} exceeds {config.MAX_ATTACHMENT_BYTES} bytes")
     return attachment
 
-
 def _build_attachments(items: list[AttachmentIn]) -> list[Attachment]:
     if len(items) > config.MAX_ATTACHMENTS:
         raise HTTPException(413, f"at most {config.MAX_ATTACHMENTS} attachments per request")
@@ -62,7 +55,6 @@ def _build_attachments(items: list[AttachmentIn]) -> list[Attachment]:
     if total > config.MAX_TOTAL_ATTACHMENT_BYTES:
         raise HTTPException(413, f"attachments exceed {config.MAX_TOTAL_ATTACHMENT_BYTES} bytes in total")
     return attachments
-
 
 def _attachment_trace(attachments: list[Attachment]) -> list[dict[str, Any]]:
     return [
@@ -77,7 +69,6 @@ def _attachment_trace(attachments: list[Attachment]) -> list[dict[str, Any]]:
         for attachment in attachments
     ]
 
-
 def _failure(
     trace: RequestTrace,
     status_code: int,
@@ -89,7 +80,6 @@ def _failure(
         content={"detail": detail, "trace": trace.to_dict()},
         headers={"X-Request-ID": trace.id},
     )
-
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Company Brain API", version="0.1.0")
@@ -133,9 +123,7 @@ def create_app() -> FastAPI:
 
     return app
 
-
 app = create_app()
-
 
 if __name__ == "__main__":
     import uvicorn

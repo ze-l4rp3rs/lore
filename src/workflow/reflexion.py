@@ -1,11 +1,8 @@
 import json
 import os
-import sys
 import time
 from dataclasses import asdict, dataclass, field
 from typing import Any
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
 from src.providers.base import Message, Provider, ToolMemo, ToolTrace
@@ -25,7 +22,6 @@ from src.workflow.tool_loop import ask
 
 NO_ANSWER = "I couldn't find a verifiable answer to this in the company records."
 
-
 @dataclass
 class Check:
     """One draft after the code checks and the reflector's review."""
@@ -38,7 +34,6 @@ class Check:
     def score(self) -> tuple[int, int, int]:
         # lower is better: a reviewed draft beats an unreviewed one, then fewest bad sentences, then uncorrected premises
         return (0 if self.reviewed else 1, len(self.issues), len(self.premise))
-
 
 @dataclass
 class RunResult:
@@ -57,13 +52,11 @@ class RunResult:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
-
 def format_request(
     question: str,
     registry: SourceRegistry
 ) -> str:
     return f"{render_context(registry)}\n\n<question>\n{question}\n</question>"
-
 
 def format_tool_trace(
     traces: list[ToolTrace]
@@ -79,7 +72,6 @@ def format_tool_trace(
             outcome = "sources " + ", ".join(trace.source_ids) if trace.source_ids else "(no results)"
         lines.append(f"- {trace.name}({arguments}) -> {outcome}")
     return "\n".join(lines)
-
 
 def _json_object(
     text: str,
@@ -97,12 +89,10 @@ def _json_object(
             found = value
     return found
 
-
 def _strings(
     value: Any
 ) -> list[str]:
     return [str(item).strip() for item in value if str(item).strip()] if isinstance(value, list) else []
-
 
 def parse_review(
     text: str,
@@ -130,7 +120,6 @@ def parse_review(
         issues[number] = ["the fact-checker did not confirm this"]
     return issues, _strings(data.get("missing")), _strings(data.get("premise"))
 
-
 def review(
     provider: Provider,
     question: str,
@@ -154,7 +143,6 @@ def review(
         if parsed is not None:
             return parsed
     return None
-
 
 def check(
     provider: Provider,
@@ -188,7 +176,6 @@ def check(
         issues.setdefault(number, []).extend(problems)
     return Check(draft=draft, issues=issues, missing=missing, premise=premise)
 
-
 def fix_request(
     result: Check
 ) -> str:
@@ -199,13 +186,11 @@ def fix_request(
     problems += [f"- False premise in the question you did not correct: {item}" for item in result.premise]
     return config.FIX_REQUEST.format(problems="\n".join(problems))
 
-
 def needs_fix(
     result: Check
 ) -> bool:
     # a gap in the records is reported, not fixed: the model cannot answer what the records lack
     return bool(result.issues or result.premise)
-
 
 def _reader_reason(
     problems: list[str]
@@ -215,7 +200,6 @@ def _reader_reason(
     if not readable and any("has no citation" in p for p in problems):
         return "no source was given for this"
     return "; ".join(readable) or "the quoted source doesn't say this"
-
 
 def run(
     provider: Provider,

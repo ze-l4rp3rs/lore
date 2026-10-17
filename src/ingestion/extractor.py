@@ -1,18 +1,12 @@
 import asyncio
 import os
-import sys
 import threading
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
 
 class ExtractionError(RuntimeError):
     """A file could not be turned into text."""
 
-
 class ExtractionUnavailable(ExtractionError):
     """The extraction library (xberg) is not installed."""
-
 
 def _await(coro):
     # xberg is async; the pipeline is sync. Run in a fresh loop, or a worker thread when one is running.
@@ -36,7 +30,6 @@ def _await(coro):
         raise box["error"]
     return box["value"]
 
-
 def _plain(
     value
 ):
@@ -44,7 +37,6 @@ def _plain(
     if value is None or isinstance(value, (str, int, float, bool)):
         return value
     return str(value)
-
 
 def _metadata(
     document
@@ -58,7 +50,6 @@ def _metadata(
         if value:
             meta[key] = _plain(value)
     return meta
-
 
 def extract_bytes(
     data: bytes,

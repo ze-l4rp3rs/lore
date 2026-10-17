@@ -1,9 +1,6 @@
 import re
 import unicodedata
-import sys
 import os
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from src.validations.sources import SourceRegistry
 
@@ -24,19 +21,16 @@ _FOLD = str.maketrans({
     "–": "-", "—": "-", " ": " ",
 })
 
-
 def _normalize(
     text: str
 ) -> str:
     # forgive case, whitespace, and typographic quotes/dashes; nothing else
     return " ".join(unicodedata.normalize("NFKC", text).translate(_FOLD).lower().split())
 
-
 def clean_quote(
     quote: str | None
 ) -> str:
     return (quote or "").strip().strip("\"'“”‘’").strip()
-
 
 def quote_in_source(
     quote: str,
@@ -54,7 +48,6 @@ def quote_in_source(
             return False
         start = found + len(piece)
     return True
-
 
 def repair_citations(
     text: str,

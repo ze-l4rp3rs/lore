@@ -1,19 +1,14 @@
-import sys
 import os
 from typing import Any
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
 from src.validations import CITATION_RE
 from src.workflow.reflexion import RunResult
-
 
 def format_answer(
     text: str
 ) -> str:
     # [[cite:<id>|<quote>]] -> [[<id>]]: the frontend renders the marker inline or as a footnote
     return CITATION_RE.sub(lambda match: f"[[{match.group(1)}]]", text)
-
 
 def build_response(
     result: RunResult

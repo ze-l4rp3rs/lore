@@ -1,9 +1,6 @@
 import argparse
 import json
 import os
-import sys
-
-sys.path.insert(0, os.path.dirname(__file__))
 
 import config
 from src.api.response import build_response

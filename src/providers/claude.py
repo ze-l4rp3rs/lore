@@ -1,15 +1,11 @@
 import json
 import os
-import sys
 from typing import Any
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
 from src.providers.base import Completion, Message, ToolCall, parse_arguments
 
 _client = None
-
 
 def client():
     # created on first use, so this module imports (and its translation is testable) without the SDK
@@ -18,7 +14,6 @@ def client():
         from anthropic import Anthropic
         _client = Anthropic(api_key=os.getenv(config.PROVIDER_KEYS["claude"]))
     return _client
-
 
 def to_anthropic_tools(
     tools: list[dict]
@@ -31,7 +26,6 @@ def to_anthropic_tools(
         }
         for t in tools
     ]
-
 
 def to_anthropic_messages(
     messages: list[Message]
@@ -64,7 +58,6 @@ def to_anthropic_messages(
         else:
             chat.append({"role": role, "content": blocks})
     return system, chat
-
 
 def complete(
     model: str,

@@ -1,14 +1,10 @@
 import json
 import os
 import time
-import sys
 from dataclasses import asdict, is_dataclass
 from typing import Any
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
 import config
-
 
 def _slug(
     text: str
@@ -21,7 +17,6 @@ def _slug(
             name += "_"
     return name.strip("_")[:40] or "question"
 
-
 def _plain(
     value: Any
 ) -> Any:
@@ -29,7 +24,6 @@ def _plain(
     if is_dataclass(value) and not isinstance(value, type):
         return asdict(value)
     return str(value)
-
 
 class RunLogger:
     """One run = one <timestamp>_<question>.json (every step, in order) plus the .md answer."""

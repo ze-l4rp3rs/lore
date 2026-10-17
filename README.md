@@ -27,77 +27,39 @@ the `X-Request-ID` header) describing the clearance used, what was attached, the
 and the time each stage took. Attachments are text inline or raw bytes; raw bytes (a file base64d in the
 request) are turned into text by xberg. See [docs/api.md](docs/api.md).
 
-To query the company graph instead of a context file, start FalkorDB, load the dataset, then ask:
+To query the company graph, start FalkorDB in the `noodle` backend repo:
 
 ```bash
+# In noodle repo:
 scripts/db.sh up        # FalkorDB on localhost:6379, browser UI on http://localhost:3000
-scripts/db.sh ingest company_brain_dataset.json   # or a data/ folder; see "Ingesting data"
+scripts/db.sh ingest    # loads the dataset (or a folder of documents)
+
+# In lore repo:
 python main.py "Who owns the Platform Redesign project?"
-scripts/db.sh down      # clean exit (keeps the data); `scripts/db.sh reset` also deletes it
 ```
 
-- If port 6379 or 3000 is taken, set `FALKORDB_PORT` / `FALKORDB_BROWSER_PORT` (and `FALKORDB_URL` for the
-  agent). The ports are bound to `localhost` only, and the image has no password.
-- With no context file and no database, the model has nothing to answer from.
+- FalkorDB connection defaults to `redis://localhost:6379/0` (set `FALKORDB_URL` if custom).
+- With no context file and no database running, the model answers from context only.
 
-### Ingesting data
+### Data Ingestion
 
-`scripts/db.sh ingest` (or `python scripts/ingest_company_data.py [source]`) reconciles the graph with a
-folder of source files and is safe to run repeatedly against a live database:
+Data ingestion into FalkorDB is handled by the `noodle` backend repository:
 
 ```bash
-scripts/db.sh ingest                 # reads the data/ folder
-scripts/db.sh ingest path/to/data    # or any folder, or a single .json file
-python scripts/ingest_company_data.py data --dry-run   # report what would change, write nothing
+# In noodle repo:
+scripts/db.sh ingest                      # ingests the default dataset
+scripts/db.sh ingest path/to/data         # ingests a folder or document file
+python scripts/ingest.py data --dry-run   # report planned changes without writing
 ```
 
-It is **incremental and additive**. Each source file is hashed and remembered in a manifest
-(`data/.ingest_manifest.json`) next to the source, together with the node ids that file defined. On the
-next run only **added** and **changed** files are written; unchanged files are skipped. A changed file's
-edges are replaced with the new ones, and a node id that no longer appears in **any** file is deleted
-(with its edges). Nothing else is ever cleared, so it never disturbs unrelated data.
-
-The source folder (`data/` is the default, and is created by you) holds structured `.json` dataset
-files and/or company documents (PDF, DOCX, XML, Markdown, plain text, etc.). Company documents are
-extracted using xberg into `Document` nodes with their relative path as the node `id` (e.g. `specs/api.xml`),
-making them directly citable and connectable.
-
-Structured `.json` files may contain any subset of the sections below; together all files form one dataset.
-Node **ids must be unique across the whole folder**, and every id referenced by an edge must be defined
-somewhere in the folder. A file may set a `clearance` on any record (see [Clearance](#clearance)); files
-and records without one default to the most open level.
-
-```json
-{
-  "people":    [{"id": "p1", "name": "Dana Okafor", "role": "CTO", "clearance": 3}],
-  "teams":     [{"id": "t1", "name": "Platform"}],
-  "projects":  [{"id": "pr1", "name": "Platform Redesign", "department": "Platform", "status": "active"}],
-  "documents": [{"id": "d1", "title": "Redesign brief", "content": "...", "created": "2026-01-05"}],
-  "decisions": [{"id": "dc1", "title": "Adopt Rust", "date": "2026-02-01", "status": "active"}],
-  "tickets":   [{"id": "tk1", "title": "Cut SMPP", "project_id": "pr1", "status": "open"}],
-  "slack_messages": [{"id": "s1", "text": "...", "channel": "#platform", "user_id": "p1"}],
-  "relationships": {
-    "owns": [{"person_id": "p1", "project_id": "pr1", "since": "2026-01-01"}]
-  }
-}
-```
-
-- Sections and the fields that become edges are defined in [schema.py](schema.py): `DATASET_SECTIONS` maps
-  a section to a node label, and `FIELD_EDGES` / `RELATIONSHIP_SECTIONS` map fields and named edge lists
-  to relationships. `company_brain_dataset.json` is a single-file example of the full shape.
-- Split a dataset across files however you like (by team, by import, …). An edited file is re-planned as a
-  whole, so it is the unit of change.
-- The manifest is per source folder; keep it when you move or change data. Add it to version control only
-  if you want the incremental state to travel with the folder. Point `FALKORDB_GRAPH_NAME` in `config.py`
-  elsewhere if `company_brain` is already in use.
+Ingestion in `noodle` is **incremental and additive**, supporting structured `.json` dataset files as well as company documents (PDF, DOCX, XML, Markdown, plain text) extracted into `Document` nodes via `xberg`.
 
 ### Clearance
 
 Every node stores a `clearance` (whole number, `0`..`5`; higher is more restricted). Askers pass a
 `clearance_level` on every request, and the graph tool returns only nodes at or below that level, so a
-low-clearance asker never sees restricted records. The scale, the default and the property name are
-defined once in [schema.py](schema.py) and re-exported by `config.py`; records without a `clearance`
-default to the most open level.
+low-clearance asker never sees restricted records. The scale, default level (`0`), and property name are
+configured in `config.py`; records without a `clearance` default to the most open level.
 
 Provider selection:
 - One API key set: that provider is used.
@@ -159,13 +121,8 @@ main.py ──► select_provider ──► run(provider, question, context) ─
 | `src/workflow/render.py` | Numbers citations and renders the readable markdown with a source list |
 | `src/api/response.py` | `build_response(result)`: the one JSON shape the CLI (and later the API) returns |
 | `src/storage/run_logger.py` | Writes each run as JSON plus markdown |
-| `src/retrieval/falkordb_client.py` | `FalkorDBClient`: parameterised read-only `query()` returning dict rows, and a separate `write()` used only by ingestion |
+| `src/retrieval/falkordb_client.py` | `FalkorDBClient`: parameterised read-only `query()` returning dict rows from the backend graph |
 | `src/tools/falkordb_query.py` | The graph tool: natural language or read-only Cypher in, one `Evidence` per row out (plus a `Note` when the result is cut off) |
-| `schema.py` | Node labels, edge types, which dataset fields become which edges, and the clearance scale. Ingestion reads most of it; the tool reads the name, date and clearance constants |
-| `scripts/ingest_company_data.py` | Thin CLI over `src/ingestion/sync.py`: reconciles a `data/` folder (or one file) into FalkorDB, incrementally |
-| `src/ingestion/sync.py` | The incremental ingester: hashes each source file, plans nodes and edges, writes only what changed, and deletes only node ids no source defines any more |
-| `company_brain_dataset.json` | The synthetic company dataset (a single-file example of the `data/` format) |
-| `docker-compose.yml`, `scripts/db.sh` | FalkorDB with a health check and its browser UI; `db.sh` starts, loads, stops and resets it |
 | `src/ingestion/extractor.py` | `extract_bytes(...)`: turns attachment bytes into text with xberg |
 
 ## Data classes

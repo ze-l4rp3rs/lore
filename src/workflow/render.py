@@ -1,9 +1,6 @@
 import re
-import sys
 import os
 from datetime import date
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from src.validations import CITATION_RE, Source, SourceRegistry, clean_quote
 
@@ -25,7 +22,6 @@ SOURCE_TYPES = {
     "decision": "Decision",
 }
 
-
 def friendly_date(
     value: str
 ) -> str:
@@ -35,7 +31,6 @@ def friendly_date(
     except ValueError:
         return value
     return f"{parsed.day} {parsed.strftime('%b %Y')}"
-
 
 def number_citations(
     text: str,
@@ -78,7 +73,6 @@ def number_citations(
         })
     return body.strip(), cited
 
-
 def source_line(
     source: dict
 ) -> str:
@@ -90,7 +84,6 @@ def source_line(
     quotes = [q for q in source["quotes"] if not any(q != other and q in other for other in source["quotes"])]
     lines += [f"> “{quote}”" for quote in quotes]
     return "\n".join(lines)
-
 
 def render_markdown(
     body: str,

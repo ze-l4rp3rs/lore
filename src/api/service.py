@@ -1,9 +1,6 @@
 import os
-import sys
 from contextlib import nullcontext
 from dataclasses import dataclass, field, replace
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from src.api.trace import RequestTrace
 from src.ingestion.extractor import ExtractionError, extract_bytes
@@ -12,13 +9,11 @@ from src.providers.router import select_provider
 from src.validations.sources import has_source_headers
 from src.workflow.reflexion import RunResult, run
 
-
 @dataclass(frozen=True)
 class Clearance:
     """What the asker may see. Passed to tools, never written by the model."""
 
     level: int
-
 
 @dataclass(frozen=True)
 class Attachment:
@@ -40,7 +35,6 @@ class Attachment:
     def extracted(self) -> bool:
         return bool(self.text.strip())
 
-
 @dataclass
 class Answer:
     result: RunResult
@@ -48,12 +42,10 @@ class Answer:
     context: str
     attachments: list[Attachment] = field(default_factory=list)
 
-
 def _label(
     value: str
 ) -> str:
     return " ".join(value.replace("[", "").replace("]", "").split()) or "attachment"
-
 
 def resolve_attachments(
     attachments: list[Attachment]
@@ -73,7 +65,6 @@ def resolve_attachments(
             resolved.append(replace(attachment, text=text, meta=meta))
     return resolved
 
-
 def prepare_context(
     context: str,
     attachments: list[Attachment]
@@ -89,7 +80,6 @@ def prepare_context(
     for attachment in inline:
         blocks.append(f"[file: {_label(attachment.filename)}]\n{attachment.text.strip()}")
     return "\n\n".join(blocks)
-
 
 def answer_question(
     question: str,

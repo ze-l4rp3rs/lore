@@ -1,16 +1,12 @@
 import json
 import os
 import secrets
-import sys
 from typing import Any
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
 from src.providers.base import Completion, Message, ToolCall, parse_arguments
 
 _client = None
-
 
 def client():
     # created on first use, so this module imports (and its translation is testable) without the SDK
@@ -19,7 +15,6 @@ def client():
         from google import genai
         _client = genai.Client(api_key=os.getenv(config.PROVIDER_KEYS["gemini"]))
     return _client
-
 
 def to_gemini_tools(
     tools: list[dict]
@@ -34,7 +29,6 @@ def to_gemini_tools(
             declaration["parameters"] = parameters
         declarations.append(declaration)
     return [{"function_declarations": declarations}]
-
 
 def to_gemini_contents(
     messages: list[Message]
@@ -76,7 +70,6 @@ def to_gemini_contents(
         else:
             contents.append({"role": role, "parts": parts})
     return system, contents
-
 
 def complete(
     model: str,

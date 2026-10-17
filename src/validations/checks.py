@@ -1,9 +1,6 @@
 import re
-import sys
 import os
 from dataclasses import dataclass, field
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
 from src.validations.citations import CITATION_RE, clean_quote, quote_in_source
@@ -23,13 +20,11 @@ _GAP_STATEMENT = re.compile(
     re.IGNORECASE,
 )
 
-
 @dataclass
 class Line:
     prefix: str  # bullet, number or heading marker, kept when the line is rebuilt
     sentences: list[str] = field(default_factory=list)
     gap: bool = False  # sits under the "not in company records" heading: states missing information
-
 
 @dataclass
 class Draft:
@@ -70,12 +65,10 @@ class Draft:
             out.append(line.prefix + " ".join(kept))
         return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
 
-
 def strip_citations(
     text: str
 ) -> str:
     return re.sub(r"\s+([.,;:!?])", r"\1", CITATION_RE.sub("", text)).strip()
-
 
 def _split_sentences(
     line: str
@@ -98,7 +91,6 @@ def _split_sentences(
         start = match.end()
     sentences.append(hidden[start:])
     return [_PLACEHOLDER.sub(lambda m: tokens[int(m.group(1))], s).strip() for s in sentences if s.strip()]
-
 
 def parse_draft(
     text: str
@@ -124,7 +116,6 @@ def parse_draft(
         lines.append(line)
     return Draft(text=text, lines=lines, numbered=numbered)
 
-
 def _plain_label(
     kinds: set[str]
 ) -> re.Pattern:
@@ -132,13 +123,11 @@ def _plain_label(
     alternatives = "|".join(sorted(re.escape(kind) for kind in kinds | {"source"}))
     return re.compile(r"(?<!\[)\[(?:" + alternatives + r")\s*:[^\]\n]*\](?!\])", re.IGNORECASE)
 
-
 def _is_heading(
     sentence: str
 ) -> bool:
     bare = sentence.strip().strip("*_ ").strip()
     return bare.endswith(":") or bool(re.fullmatch(r"\*\*[^*]+\*\*", sentence.strip()))
-
 
 def _needs_citation(
     sentence: str
@@ -147,7 +136,6 @@ def _needs_citation(
     if sentence.startswith(config.GAPS_HEADING) or _GAP_STATEMENT.search(sentence):
         return False
     return not _is_heading(sentence)
-
 
 def mechanical_issues(
     draft: Draft,

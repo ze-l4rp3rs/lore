@@ -3,11 +3,9 @@
 
 import hashlib
 import re
-import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-import schema
+import config
 from src.retrieval.falkordb_client import get_client
 from src.validations import Evidence, Note
 
@@ -42,7 +40,7 @@ _STOPWORDS = {
 _LEADING_FILLER = re.compile(r"^(?:the|a|an)\s+", re.IGNORECASE)
 
 # a node's display name and the text a keyword search looks in
-_NAME = "coalesce(" + ", ".join(f"entity.{name}" for name in schema.NAME_PROPERTIES) + ", '')"
+_NAME = "coalesce(" + ", ".join(f"entity.{name}" for name in config.NAME_PROPERTIES) + ", '')"
 _HAYSTACK = ("toLower(coalesce(n.name, '') + ' ' + coalesce(n.title, '') + ' ' + coalesce(n.key, '') + ' ' + "
              "coalesce(n.text, '') + ' ' + coalesce(n.content, '') + ' ' + coalesce(n.description, ''))")
 
@@ -50,7 +48,6 @@ _HAYSTACK = ("toLower(coalesce(n.name, '') + ' ' + coalesce(n.title, '') + ' ' +
 # without one counts as the most open level
 def _clear(node: str) -> str:
     return f"coalesce({node}.clearance, $default_clearance) <= $max_clearance"
-
 
 OWNERS = f"""
 MATCH (owner)-[:OWNS]->(entity)
@@ -77,12 +74,10 @@ ORDER BY hits DESC
 LIMIT $limit
 """
 
-
 def _words(
     text: str
 ) -> list[str]:
     return re.findall(r"[\w$#.-]+", text.lower())
-
 
 def _after(
     pattern: str,
@@ -93,7 +88,6 @@ def _after(
     if not match:
         return ""
     return _LEADING_FILLER.sub("", query[match.end():].strip(" ?.!\"'")).strip()
-
 
 def check_read_only(
     cypher: str
@@ -106,10 +100,9 @@ def check_read_only(
     if len(_CALL.findall(structure)) != len(_READ_PROCEDURE.findall(structure)):
         raise ValueError("read-only queries only: CALL is limited to db.labels(), db.relationshipTypes(), db.propertyKeys()")
 
-
 def plan_query(
     query: str,
-    max_clearance: int = schema.MAX_CLEARANCE_LEVEL
+    max_clearance: int = config.MAX_CLEARANCE_LEVEL
 ) -> tuple[str, dict, bool]:
     """Return (cypher, params, is_raw_cypher) for a natural-language question or a raw Cypher query.
 
@@ -123,7 +116,7 @@ def plan_query(
     tokens = _words(query)
     words = set(tokens)
     limit = MAX_ROWS + 1  # one extra row tells us the result was cut
-    limit_params = {"limit": limit, "max_clearance": max_clearance, "default_clearance": schema.DEFAULT_CLEARANCE_LEVEL}
+    limit_params = {"limit": limit, "max_clearance": max_clearance, "default_clearance": config.DEFAULT_CLEARANCE_LEVEL}
 
     if "who" in words and (words & {"own", "owns", "owner", "owned"} or re.search(r"\bresponsible for\b", query, re.I)):
         term = _after(r"\b(?:owns?|owner of|owned|responsible for)\b", query)
@@ -146,7 +139,6 @@ def plan_query(
         raise ValueError("nothing to search for; name an entity or write a read-only Cypher query")
     return SEARCH, {"terms": terms, **limit_params}, False
 
-
 def _visible(
     rows: list[dict],
     max_clearance: int
@@ -157,13 +149,12 @@ def _visible(
     for row in rows:
         if all(
             not isinstance(value, dict)
-            or value.get(schema.CLEARANCE_PROPERTY) is None
-            or int(value[schema.CLEARANCE_PROPERTY]) <= max_clearance
+            or value.get(config.CLEARANCE_PROPERTY) is None
+            or int(value[config.CLEARANCE_PROPERTY]) <= max_clearance
             for value in row.values()
         ):
             visible.append(row)
     return visible
-
 
 def _row_text(
     row: dict
@@ -176,7 +167,6 @@ def _row_text(
             continue
         parts.append(f"{key}: {value}")
     return " | ".join(parts)
-
 
 def _evidence(
     row: dict,
@@ -197,16 +187,15 @@ def _evidence(
             meta=meta,
         )
     labels = node.get("_labels") or row.get("type") or row.get("entity_type") or []
-    label = next((str(node[name]) for name in schema.NAME_PROPERTIES if node.get(name)), str(node["id"]))
+    label = next((str(node[name]) for name in config.NAME_PROPERTIES if node.get(name)), str(node["id"]))
     return Evidence(
         kind=str(labels[0]).lower() if labels else "node",
         label=label,
         text=text,
-        date=next((str(node[name]) for name in schema.DATE_PROPERTIES if node.get(name)), ""),
+        date=next((str(node[name]) for name in config.DATE_PROPERTIES if node.get(name)), ""),
         ref=str(node["id"]),
         meta=meta,
     )
-
 
 def falkordb_query(
     query: str,
@@ -227,7 +216,7 @@ def falkordb_query(
     become sources.
     """
     max_clearance = getattr(user, "level", None)
-    max_clearance = schema.MAX_CLEARANCE_LEVEL if max_clearance is None else int(max_clearance)
+    max_clearance = config.MAX_CLEARANCE_LEVEL if max_clearance is None else int(max_clearance)
 
     client = get_client()
     if not client.available:

@@ -1,14 +1,10 @@
 import importlib
 import os
-import sys
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from dotenv import load_dotenv
 
 import config
 from src.providers.base import Provider
-
 
 def available_providers():
     load_dotenv()
@@ -17,7 +13,6 @@ def available_providers():
         for name, env_key in config.PROVIDER_KEYS.items()
         if os.getenv(env_key, "").strip()
     ]
-
 
 def default_provider(
     available: list[str]
@@ -30,7 +25,6 @@ def default_provider(
             f"Set DEFAULT_PROVIDER to one of: {', '.join(available)}."
         )
     return name
-
 
 def ask_which(
     available: list[str]
@@ -46,7 +40,6 @@ def ask_which(
         if answer.isdigit() and 1 <= int(answer) <= len(available):
             return available[int(answer) - 1]
         print(f"Enter a number from 1 to {len(available)}, or a provider name.")
-
 
 def select_provider(
     interactive: bool | None = None

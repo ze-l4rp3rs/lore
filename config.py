@@ -1,5 +1,12 @@
-import schema
+# Clearance levels
+CLEARANCE_PROPERTY = "clearance"
+MIN_CLEARANCE_LEVEL = 0
+MAX_CLEARANCE_LEVEL = 5
+DEFAULT_CLEARANCE_LEVEL = 0
 
+# Node display and date properties for graph result formatting
+NAME_PROPERTIES = ["name", "title", "key", "channel"]
+DATE_PROPERTIES = ["date", "created", "timestamp", "start_date"]
 # LLM Provider Configuration
 # provider name -> env var that holds its API key (the router looks for these in .env)
 PROVIDER_KEYS = {
@@ -28,13 +35,10 @@ REQUIRE_QUOTES = True  # every citation must carry an exact quote from its sourc
 
 # FalkorDB: the default URL; the FALKORDB_URL environment variable (or .env) overrides it in the client
 FALKORDB_URL = "redis://localhost:6379/0"
-FALKORDB_GRAPH_NAME = "company_brain"
+FALKORDB_GRAPH_NAME = "noodle"
 
 RUNS_FOLDER = "runs"
 
-# Clearance levels are defined once in schema.py; re-exported here for the API and the CLI
-MIN_CLEARANCE_LEVEL = schema.MIN_CLEARANCE_LEVEL
-MAX_CLEARANCE_LEVEL = schema.MAX_CLEARANCE_LEVEL
 
 # Web API (see docs/api.md); host/port/debug can be overridden with the environment variables of the same name
 API_HOST = "127.0.0.1"

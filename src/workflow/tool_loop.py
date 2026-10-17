@@ -1,12 +1,9 @@
 import json
 import os
 import re
-import sys
 import time
 from dataclasses import replace
 from typing import Any
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
 from src.providers.base import Message, ModelReply, Provider, ToolCall, ToolMemo, ToolTrace
@@ -16,7 +13,6 @@ from src.validations import Evidence, Note, Source, SourceRegistry, render_sourc
 _THINK_BLOCK = re.compile(r"<(think|thinking)>.*?</\1>", re.IGNORECASE | re.DOTALL)
 _THINK_END = re.compile(r"</(?:think|thinking)>", re.IGNORECASE)
 _THINK_OPEN = re.compile(r"<(?:think|thinking)>", re.IGNORECASE)
-
 
 def split_reasoning(
     text: str
@@ -35,13 +31,11 @@ def split_reasoning(
         text = text[:opened.start()]
     return text.strip(), "\n\n".join(part.strip() for part in reasoning if part.strip())
 
-
 def memo_key(
     name: str,
     arguments: dict
 ) -> str:
     return name + json.dumps(arguments, sort_keys=True, default=str)
-
 
 def register_result(
     name: str,
@@ -58,7 +52,6 @@ def register_result(
         return sources, [item.text for item in result if isinstance(item, Note)]
     label = f"{name}({json.dumps(arguments, ensure_ascii=False)})" if arguments else name
     return [registry.add(Evidence(kind="tool", label=label, text=str(result)))], []
-
 
 def run_tool(
     call: ToolCall,
@@ -101,7 +94,6 @@ def run_tool(
     )
     memo[key] = trace
     return trace
-
 
 def ask(
     provider: Provider,

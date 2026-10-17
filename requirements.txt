@@ -1,9 +1,22 @@
+# Pinned requirements for reproducible installs.
+# For the canonical dependency list, see pyproject.toml.
+# Re-generate with: pip freeze > requirements.txt
+
+# LLM providers
 groq==0.16.0
 anthropic==0.39.0
 google-genai==2.30.1
+
+# Runtime
 python-dotenv==1.0.1
+
+# Graph client (read-only queries; writes live in noodle)
 falkordb==1.7.1
 redis==8.1.0
+
+# Web API
 fastapi==0.143.2
 uvicorn[standard]==0.54.0
+
+# Document extraction (attachment handling)
 xberg==1.3.9

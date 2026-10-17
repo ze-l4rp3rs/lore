@@ -1,10 +1,7 @@
 import os
 import re
 import time
-import sys
 from typing import Any
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import config
 from src.providers.base import Completion, Message, RequestTooLarge, ToolCall
@@ -17,7 +14,6 @@ _OUTPUT_LIMIT = re.compile(r"output tokens per minute.*?Limit (\d+)", re.IGNOREC
 _client = None
 _max_tokens_cap: int | None = None  # learned from a "request too large" error; kept for the whole run
 
-
 def client():
     # created on first use, so this module imports (and its translation is testable) without the SDK
     global _client
@@ -25,7 +21,6 @@ def client():
         from groq import Groq
         _client = Groq(api_key=os.getenv(config.PROVIDER_KEYS["groq"]))
     return _client
-
 
 def to_groq_messages(
     messages: list[Message]
@@ -47,7 +42,6 @@ def to_groq_messages(
             converted.append({"role": m["role"], "content": m["content"]})
     return converted
 
-
 def shrink_max_tokens(
     error: str,
     current: int
@@ -56,7 +50,6 @@ def shrink_max_tokens(
     match = _OUTPUT_LIMIT.search(error)
     smaller = int(int(match.group(1)) * 0.9) if match else 0
     return smaller if 0 < smaller < current else 0
-
 
 def create_with_retry(
     **kwargs: Any
@@ -86,7 +79,6 @@ def create_with_retry(
             wait = RATE_LIMIT_WAIT_SECONDS * attempt
             print(f"Groq rate limit hit; waiting {wait}s (retry {attempt}/{RATE_LIMIT_RETRIES - 1})...")
             time.sleep(wait)
-
 
 def complete(
     model: str,

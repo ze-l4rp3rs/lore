@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lore"
+version = "0.1.0"
+description = "Company Brain – agent layer (Reflexion loop, providers, API)"
+requires-python = ">=3.12"
+dependencies = [
+    # LLM providers
+    "groq>=0.16",
+    "anthropic>=0.39",
+    "google-genai>=2.30",
+    # runtime
+    "python-dotenv>=1.0",
+    # graph client (read-only; writes live in noodle)
+    "falkordb>=1.7",
+    "redis>=8.1",
+    # web API
+    "fastapi>=0.143",
+    "uvicorn[standard]>=0.54",
+    # document extraction (attachment handling)
+    "xberg>=1.3",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.setuptools.package-dir]
+"" = "."
